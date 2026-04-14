@@ -16,20 +16,25 @@
 
   <div class="seccion">
     <h2>Integrantes</h2>
-    <ul>
-      <% @nombre.integrantes.each do |i| %>
-        <li><%= i.nombre %></li>
-      <% end %>
-    </ul>
+
+    <% @nombre.integrantes.each do |i| %>
+      <div class="integrante">
+        <p><strong>Nombre:</strong> <%= i.nombre %></p>
+        <p><strong>Matrícula:</strong> <%= i.matricula %></p>
+      </div>
+    <% end %>
+
   </div>
 
   <div class="seccion">
     <h2>Asesores</h2>
-    <ul>
-      <% @nombre.asesores.each do |a| %>
-        <li><%= a.nombre %></li>
-      <% end %>
-    </ul>
+
+    <% @nombre.asesores.each do |a| %>
+      <div class="asesor">
+        <p><strong>Nombre:</strong> <%= a.nombre %></p>
+      </div>
+    <% end %>
+
   </div>
 
   <div class="seccion">

@@ -58,7 +58,7 @@ class NombresController < ApplicationController
       :titulo,
       :descripcion,
       :documento,
-      integrantes_attributes: [:id, :nombre, :_destroy],
+      integrantes_attributes: [:id, :nombre, :matricula, :_destroy],
       asesores_attributes: [:id, :nombre, :_destroy]
     )
   end

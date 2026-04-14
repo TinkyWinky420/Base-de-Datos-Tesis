@@ -105,3 +105,24 @@ ul {
   text-align: center;
   color: green;
 }
+
+.integrante, .asesor {
+  border: 1px solid #e0e0e0;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.integrante p,
+.asesor p {
+  margin: 4px 0;
+}
+
+.seccion {
+  margin-bottom: 25px;
+}
+
+.seccion h2 {
+  margin-bottom: 12px;
+}

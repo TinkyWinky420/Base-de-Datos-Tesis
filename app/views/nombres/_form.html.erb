@@ -1,58 +1,158 @@
 <%= form_with(model: nombre, local: true) do |form| %>
-  <% if nombre.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(nombre.errors.count, "errores") %> impidieron guardar la tesis:</h2>
-
-      <ul>
-        <% nombre.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
 
   <div>
-    <%= form.label :titulo, "Título", style: "display: block" %>
+    <%= form.label :titulo, "Título" %>
     <%= form.text_field :titulo %>
   </div>
 
   <div>
-    <%= form.label :descripcion, "Descripción", style: "display: block" %>
+    <%= form.label :descripcion, "Descripción" %>
     <%= form.textarea :descripcion %>
   </div>
 
+  <hr>
+
   <h3>Integrantes</h3>
 
-  <%= form.fields_for :integrantes do |i| %>
-    <div>
-      <%= i.label :nombre, "Nombre del integrante" %>
-      <%= i.text_field :nombre %>
-    </div>
-  <% end %>
+  <div id="integrantes">
+    <%= form.fields_for :integrantes do |i| %>
+      <div class="integrante">
+        <div class="campo">
+          <label>Nombre:</label>
+          <%= i.text_field :nombre,
+              pattern: "[A-Za-záéíóúÁÉÍÓÚñÑ ]+",
+              oninvalid: "this.setCustomValidity('El nombre no puede contener numeros')",
+              oninput: "this.setCustomValidity('')",
+              required: true %>
+        </div>
+
+        <div class="campo">
+          <label>Matrícula:</label>
+          <%= i.text_field :matricula,
+              class: "sin-flechas",
+              inputmode: "numeric",
+              pattern: "[0-9]+",
+              oninvalid: "this.setCustomValidity('La matrícula solo puede contener números')",
+              oninput: "this.setCustomValidity('')",
+              required: true %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <button type="button" onclick="agregarIntegrante()">Agregar integrante</button>
 
   <hr>
 
   <h3>Asesores</h3>
 
-  <%= form.fields_for :asesores do |a| %>
-    <div>
-      <%= a.label :nombre, "Nombre del asesor" %>
-      <%= a.text_field :nombre %>
-    </div>
-  <% end %>
+  <div id="asesores">
+    <%= form.fields_for :asesores do |a| %>
+      <div class="asesor">
+        <div class="campo">
+          <label>Nombre:</label>
+          <%= a.text_field :nombre,
+              pattern: "[A-Za-záéíóúÁÉÍÓÚñÑ ]+",
+              oninvalid: "this.setCustomValidity('El nombre no puede contener numeros')",
+              oninput: "this.setCustomValidity('')",
+              required: true %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <button type="button" onclick="agregarAsesor()">Agregar asesor</button>
 
   <hr>
-
-  <h3>Documento</h3>
 
   <div>
     <%= form.label :documento, "Subir documento" %>
     <%= form.file_field :documento %>
   </div>
 
-  <hr>
-  
-  <div>
-    <%= form.submit "Guardar Tesis" %>
-  </div>
+  <br>
+
+  <%= form.submit "Guardar Tesis" %>
+
 <% end %>
+
+<style>
+.integrante, .asesor {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+.sin-flechas::-webkit-outer-spin-button,
+.sin-flechas::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.sin-flechas {
+  -moz-appearance: textfield;
+}
+</style>
+
+<script>
+function agregarIntegrante() {
+  const container = document.getElementById("integrantes");
+  const index = container.querySelectorAll(".integrante").length;
+
+  const html = `
+    <div class="integrante">
+      <div class="campo">
+        <label>Nombre:</label>
+        <input type="text"
+          pattern="[A-Za-záéíóúÁÉÍÓÚñÑ ]+"
+          oninvalid="this.setCustomValidity('El nombre no puede contener numeros')"
+          oninput="this.setCustomValidity('')"
+          required
+          name="nombre[integrantes_attributes][${index}][nombre]">
+      </div>
+
+      <div class="campo">
+        <label>Matrícula:</label>
+        <input type="text"
+          class="sin-flechas"
+          inputmode="numeric"
+          pattern="[0-9]+"
+          oninvalid="this.setCustomValidity('La matrícula solo puede contener números')"
+          oninput="this.setCustomValidity('')"
+          required
+          name="nombre[integrantes_attributes][${index}][matricula]">
+      </div>
+    </div>
+  `;
+
+  container.insertAdjacentHTML("beforeend", html);
+}
+
+function agregarAsesor() {
+  const container = document.getElementById("asesores");
+  const index = container.querySelectorAll(".asesor").length;
+
+  const html = `
+    <div class="asesor">
+      <div class="campo">
+        <label>Nombre:</label>
+        <input type="text"
+          pattern="[A-Za-záéíóúÁÉÍÓÚñÑ ]+"
+          oninvalid="this.setCustomValidity('El nombre no puede contener numeros')"
+          oninput="this.setCustomValidity('')"
+          required
+          name="nombre[asesores_attributes][${index}][nombre]">
+      </div>
+    </div>
+  `;
+
+  container.insertAdjacentHTML("beforeend", html);
+}
+</script>
