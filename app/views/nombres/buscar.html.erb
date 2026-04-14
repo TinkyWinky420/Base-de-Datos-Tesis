@@ -1,0 +1,24 @@
+<h1>Buscar Tesis</h1>
+
+<%= form_with url: buscar_nombres_path, method: :get do %>
+  <div>
+    <%= label_tag :numero_control, "Número de control" %>
+    <%= text_field_tag :numero_control %>
+  </div>
+
+  <div>
+    <%= submit_tag "Buscar" %>
+  </div>
+<% end %>
+
+<hr>
+
+<% if @nombre %>
+  <h2>Resultado</h2>
+  <p><strong>Número de control:</strong> <%= @nombre.numero_control %></p>
+  <p><strong>Título:</strong> <%= @nombre.titulo %></p>
+
+  <%= link_to "Ver tesis", @nombre %>
+<% elsif params[:numero_control] %>
+  <p>No se encontró ninguna tesis</p>
+<% end %>

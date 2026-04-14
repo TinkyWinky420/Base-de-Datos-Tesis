@@ -1,0 +1,58 @@
+<p class="notice"><%= notice %></p>
+
+<div class="contenedor">
+
+  <h1 class="titulo"><%= @nombre.titulo %></h1>
+
+  <div class="seccion">
+    <h2>Número de control</h2>
+    <p><strong><%= @nombre.numero_control %></strong></p>
+  </div>
+
+  <div class="seccion">
+    <h2>Descripción</h2>
+    <p><%= @nombre.descripcion %></p>
+  </div>
+
+  <div class="seccion">
+    <h2>Integrantes</h2>
+    <ul>
+      <% @nombre.integrantes.each do |i| %>
+        <li><%= i.nombre %></li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="seccion">
+    <h2>Asesores</h2>
+    <ul>
+      <% @nombre.asesores.each do |a| %>
+        <li><%= a.nombre %></li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="seccion">
+    <h2>Documento</h2>
+
+    <% if @nombre.documento.attached? %>
+      <p>
+        <%= @nombre.documento.filename %>
+      </p>
+
+      <p>
+        <%= link_to "Descargar documento", rails_blob_path(@nombre.documento, disposition: "attachment"), class: "btn" %>
+      </p>
+
+    <% else %>
+      <p>No hay documento subido</p>
+    <% end %>
+  </div>
+
+  <div class="acciones">
+    <%= link_to "Editar", edit_nombre_path(@nombre), class: "btn" %>
+    <%= link_to "Volver", nombres_path, class: "btn" %>
+    <%= button_to "Eliminar", @nombre, method: :delete, class: "btn-danger" %>
+  </div>
+
+</div>

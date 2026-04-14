@@ -1,0 +1,11 @@
+<% content_for :title, "Nueva Tesis" %>
+
+<h1>Nueva Tesis</h1>
+
+<%= render "form", nombre: @nombre %>
+
+<br>
+
+<div>
+  <%= link_to "Volver a tesis", nombres_path %>
+</div>

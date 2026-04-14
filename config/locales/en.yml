@@ -1,0 +1,18 @@
+es:
+  activerecord:
+    models:
+      nombre: "Tesis"
+    attributes:
+      nombre:
+        titulo: "Título"
+        descripcion: "Descripción"
+
+  helpers:
+    submit:
+      create: "Crear %{model}"
+      update: "Actualizar %{model}"
+
+  links:
+    new: "Nueva %{model}"
+    edit: "Editar %{model}"
+    destroy: "Eliminar"

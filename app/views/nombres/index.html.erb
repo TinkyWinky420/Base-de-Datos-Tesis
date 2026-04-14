@@ -1,0 +1,22 @@
+<div class="contenedor">
+
+  <h1 class="titulo">Listado de Tesis</h1>
+
+  <% if @nombres.any? %>
+
+    <% @nombres.each do |n| %>
+      <div class="seccion">
+        <p><strong>No. <%= n.numero_control %></strong></p>
+        <p><%= n.titulo %></p>
+
+        <%= link_to "Ver detalles", n, class: "btn" %>
+      </div>
+    <% end %>
+
+  <% else %>
+
+    <p>No hay tesis registradas</p>
+
+  <% end %>
+
+</div>

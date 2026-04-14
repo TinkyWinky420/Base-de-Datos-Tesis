@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TesisApp</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  </head>
+
+  <body>
+
+    <nav class="navbar">
+      <h2 class="logo">
+        Sistema de guardado de tesis de Ingeniería en Sistemas Computacionales
+        <small>Universidad Tres Culturas</small>
+      </h2>
+
+      <div class="menu">
+        <%= link_to "Inicio", root_path %>
+        <%= link_to "Agregar Tesis", new_nombre_path %>
+        <%= link_to "Buscar", buscar_nombres_path %>
+        <%= link_to "Ver listado de Tesis", nombres_path %>
+      </div>
+    </nav>
+
+    <div class="contenedor">
+      <%= yield %>
+    </div>
+
+    <div class="footer-logo">
+      <img src="<%= asset_path('utc.png') %>" alt="UTC Logo">
+    </div>
+
+  </body>
+</html>
