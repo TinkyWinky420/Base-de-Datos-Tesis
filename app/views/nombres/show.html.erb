@@ -24,6 +24,10 @@
       </div>
     <% end %>
 
+    <% if @nombre.integrantes.empty? %>
+      <p>No hay integrantes registrados</p>
+    <% end %>
+
   </div>
 
   <div class="seccion">
@@ -35,23 +39,25 @@
       </div>
     <% end %>
 
+    <% if @nombre.asesores.empty? %>
+      <p>No hay asesores registrados</p>
+    <% end %>
+
   </div>
 
   <div class="seccion">
     <h2>Documento</h2>
 
     <% if @nombre.documento.attached? %>
-      <p>
-        <%= @nombre.documento.filename %>
-      </p>
+      <p><%= @nombre.documento.filename %></p>
 
       <p>
         <%= link_to "Descargar documento", rails_blob_path(@nombre.documento, disposition: "attachment"), class: "btn" %>
       </p>
-
     <% else %>
       <p>No hay documento subido</p>
     <% end %>
+
   </div>
 
   <div class="acciones">

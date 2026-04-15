@@ -17,6 +17,7 @@
   <div id="integrantes">
     <%= form.fields_for :integrantes do |i| %>
       <div class="integrante">
+
         <div class="campo">
           <label>Nombre:</label>
           <%= i.text_field :nombre,
@@ -36,6 +37,12 @@
               oninput: "this.setCustomValidity('')",
               required: true %>
         </div>
+
+        <% if i.object.persisted? %>
+          <%= link_to "Eliminar integrante", motivo_integrante_path(i.object),
+            style: "display:inline-block; margin-top:8px; background:#dc3545; color:white; padding:6px 10px; border-radius:5px; text-decoration:none;" %>
+        <% end %>
+
       </div>
     <% end %>
   </div>

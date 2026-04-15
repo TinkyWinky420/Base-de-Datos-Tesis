@@ -1,0 +1,13 @@
+<h2>Motivo de la expulsion</h2>
+
+<%= form_with url: verificar_motivo_integrante_path(@integrante), method: :post do %>
+
+  <div>
+    <textarea name="motivo" required></textarea>
+  </div>
+
+  <br>
+
+  <%= submit_tag "Continuar" %>
+
+<% end %>

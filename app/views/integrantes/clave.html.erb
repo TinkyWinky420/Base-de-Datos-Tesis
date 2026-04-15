@@ -1,0 +1,23 @@
+<h2>Confirmar eliminación</h2>
+
+<div class="contenedor">
+
+  <p>Se requiere clave para realizar esta accion.</p>
+
+  <%= form_with url: eliminar_confirmado_integrante_path(@integrante), method: :post do %>
+
+    <div class="campo">
+      <label>Clave:</label>
+      <input type="password" name="clave" required>
+    </div>
+
+    <br>
+
+    <div class="acciones">
+      <%= submit_tag "Eliminar integrante", class: "btn-danger" %>
+      <%= link_to "Cancelar", nombres_path, class: "btn" %>
+    </div>
+
+  <% end %>
+
+</div>

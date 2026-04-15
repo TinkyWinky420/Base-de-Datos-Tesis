@@ -7,5 +7,14 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :integrantes do
+    member do
+      get :motivo
+      post :verificar_motivo
+      get :clave
+      post :eliminar_confirmado
+    end
+  end
+
   root "home#index"
 end
