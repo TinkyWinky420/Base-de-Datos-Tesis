@@ -1,4 +1,4 @@
-<%= form_with(model: nombre, local: true) do |form| %>
+<%= form_with(model: nombre, local: true, html: { novalidate: true }) do |form| %>
 
   <div>
     <%= form.label :titulo, "Título" %>
@@ -76,31 +76,6 @@
 
 <% end %>
 
-<style>
-.integrante, .asesor {
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-}
-
-.campo {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 8px;
-}
-
-.sin-flechas::-webkit-outer-spin-button,
-.sin-flechas::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.sin-flechas {
-  -moz-appearance: textfield;
-}
-</style>
-
 <script>
 function agregarIntegrante() {
   const container = document.getElementById("integrantes");
@@ -121,7 +96,6 @@ function agregarIntegrante() {
       <div class="campo">
         <label>Matrícula:</label>
         <input type="text"
-          class="sin-flechas"
           inputmode="numeric"
           pattern="[0-9]+"
           oninvalid="this.setCustomValidity('La matrícula solo puede contener números')"

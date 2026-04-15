@@ -10,8 +10,6 @@ class NombresController < ApplicationController
 
   def new
     @nombre = Nombre.new
-    @nombre.integrantes.build
-    @nombre.asesores.build
   end
 
   def edit
@@ -23,6 +21,7 @@ class NombresController < ApplicationController
     if @nombre.save
       redirect_to @nombre, notice: "Tesis creada correctamente."
     else
+      puts @nombre.errors.full_messages
       render :new, status: :unprocessable_entity
     end
   end
@@ -31,6 +30,7 @@ class NombresController < ApplicationController
     if @nombre.update(nombre_params)
       redirect_to @nombre, notice: "Tesis actualizada correctamente."
     else
+      puts @nombre.errors.full_messages
       render :edit, status: :unprocessable_entity
     end
   end
