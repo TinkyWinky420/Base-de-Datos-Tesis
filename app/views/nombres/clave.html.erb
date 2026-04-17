@@ -1,6 +1,9 @@
 <h2>Ingrese clave de seguridad</h2>
 
 <%= form_with url: confirmar_eliminacion_nombre_path(@nombre), method: :post do %>
+
+  <input type="hidden" name="motivo" value="<%= params[:motivo] %>">
+
   <div>
     <label>Clave:</label>
     <input type="password" name="clave" required>
@@ -9,6 +12,7 @@
   <br>
 
   <%= submit_tag "Eliminar tesis" %>
+
 <% end %>
 
 <% if flash[:alert] %>

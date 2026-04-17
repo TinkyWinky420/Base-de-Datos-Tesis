@@ -1,5 +1,5 @@
 class NombresController < ApplicationController
-  before_action :set_nombre, only: %i[ show edit update destroy ]
+  before_action :set_nombre, only: %i[ show destroy motivo clave confirmar_eliminacion ]
 
   def index
     @nombres = Nombre.all
@@ -10,15 +10,20 @@ class NombresController < ApplicationController
 
   def new
     @nombre = Nombre.new
-  end
-
-  def edit
+    @nombre.integrantes.build
+    @nombre.asesores.build
   end
 
   def create
     @nombre = Nombre.new(nombre_params)
 
     if @nombre.save
+
+      Historial.create(
+        accion: "Creación de tesis",
+        descripcion: "Se creó la tesis #{@nombre.titulo} con número #{@nombre.numero_control}"
+      )
+
       redirect_to @nombre, notice: "Tesis creada correctamente."
     else
       puts @nombre.errors.full_messages
@@ -26,24 +31,30 @@ class NombresController < ApplicationController
     end
   end
 
-  def update
-    if @nombre.update(nombre_params)
-      redirect_to @nombre, notice: "Tesis actualizada correctamente."
+  def motivo
+  end
+
+  def clave
+  end
+
+  def confirmar_eliminacion
+    if params[:clave] == "0000"
+
+      Historial.create(
+        accion: "Eliminación de tesis",
+        descripcion: "Se eliminó la tesis #{@nombre.titulo} con número #{@nombre.numero_control}. Razón: #{params[:motivo]}"
+      )
+
+      @nombre.destroy
+      redirect_to nombres_path, notice: "Tesis eliminada correctamente."
     else
-      puts @nombre.errors.full_messages
-      render :edit, status: :unprocessable_entity
+      flash[:alert] = "Clave incorrecta"
+      render :clave
     end
   end
 
   def destroy
-    @nombre.destroy
-    redirect_to nombres_path, notice: "Tesis eliminada correctamente."
-  end
-
-  def buscar
-    if params[:numero_control].present?
-      @nombre = Nombre.find_by(numero_control: params[:numero_control])
-    end
+    redirect_to motivo_nombre_path(@nombre)
   end
 
   private
@@ -54,7 +65,6 @@ class NombresController < ApplicationController
 
   def nombre_params
     params.require(:nombre).permit(
-      :numero_control,
       :titulo,
       :descripcion,
       :documento,

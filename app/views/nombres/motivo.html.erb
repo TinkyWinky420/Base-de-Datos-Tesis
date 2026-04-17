@@ -1,0 +1,14 @@
+<h2>Motivo de eliminación de tesis</h2>
+
+<%= form_with url: clave_nombre_path(@nombre), method: :post do %>
+
+  <div>
+    <label>Escribe el motivo:</label>
+    <textarea name="motivo" required></textarea>
+  </div>
+
+  <br>
+
+  <%= submit_tag "Continuar" %>
+
+<% end %>

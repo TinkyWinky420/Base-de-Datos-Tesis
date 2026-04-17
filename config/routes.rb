@@ -1,18 +1,18 @@
 Rails.application.routes.draw do
+  get "historial/index"
   get "home/index"
 
-  resources :nombres, path: "bases" do
-    collection do
-      get :buscar
-    end
-  end
+  get "historial", to: "historial#index"
 
-  resources :integrantes do
+  resources :nombres, path: "bases" do
     member do
       get :motivo
-      post :verificar_motivo
-      get :clave
-      post :eliminar_confirmado
+      post :clave
+      post :confirmar_eliminacion
+    end
+
+    collection do
+      get :buscar
     end
   end
 

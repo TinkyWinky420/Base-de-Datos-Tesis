@@ -14,8 +14,7 @@ class Nombre < ApplicationRecord
   private
 
   def generar_numero_control
-    ultimo = Nombre.maximum(:numero_control).to_i
-    siguiente = ultimo + 1
+    siguiente = (Nombre.maximum(:id) || 0) + 1
     self.numero_control = format("%04d", siguiente)
   end
 end

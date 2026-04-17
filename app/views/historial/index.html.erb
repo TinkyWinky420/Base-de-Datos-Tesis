@@ -1,0 +1,32 @@
+<% @historiales.each do |h| %>
+  <div class="seccion">
+
+    <p><strong><%= h.accion %></strong></p>
+
+    <% if h.descripcion.include?("Se eliminó la tesis") %>
+      <% partes = h.descripcion.split(".") %>
+      <% datos = partes[0] %>
+      <% motivo = partes[1] %>
+
+      <% nombre = datos.match(/tesis (.*?) con/)[1] rescue "" %>
+      <% numero = datos.match(/número (.*?)$/)[1] rescue "" %>
+
+      <p><strong>Nombre:</strong> <%= nombre %></p>
+      <p><strong>Número de seguimiento:</strong> <%= numero %></p>
+      <p><strong>Motivo:</strong> <%= motivo.to_s.gsub("Razón:", "").strip %></p>
+
+    <% elsif h.descripcion.include?("Se creó la tesis") %>
+      <% nombre = h.descripcion.match(/tesis (.*?) con/)[1] rescue "" %>
+      <% numero = h.descripcion.match(/número (.*?)$/)[1] rescue "" %>
+
+      <p><strong>Nombre:</strong> <%= nombre %></p>
+      <p><strong>Número de seguimiento:</strong> <%= numero %></p>
+    <% end %>
+
+    <p><small><%= h.created_at.strftime("%d/%m/%Y %H:%M") %></small></p>
+
+  </div>
+
+  <hr>
+
+<% end %>
