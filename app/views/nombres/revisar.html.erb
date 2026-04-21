@@ -1,0 +1,59 @@
+<div class="contenedor">
+
+  <h1 class="titulo">Mi Tesis</h1>
+
+  <% if @nombre.present? %>
+
+    <div class="seccion">
+      <h2>Título</h2>
+      <p><%= @nombre.titulo %></p>
+    </div>
+
+    <div class="seccion">
+      <h2>Número de control</h2>
+      <p><strong><%= @nombre.numero_control %></strong></p>
+    </div>
+
+    <div class="seccion">
+      <h2>Descripción</h2>
+      <p><%= @nombre.descripcion %></p>
+    </div>
+
+    <div class="seccion">
+      <h2>Integrantes</h2>
+      <% @nombre.integrantes.each do |i| %>
+        <div class="integrante">
+          <p><strong>Nombre:</strong> <%= i.nombre %></p>
+          <p><strong>Matrícula:</strong> <%= i.matricula %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="seccion">
+      <h2>Asesores</h2>
+      <% @nombre.asesores.each do |a| %>
+        <div class="asesor">
+          <p><strong>Nombre:</strong> <%= a.nombre %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="seccion">
+      <h2>Documento</h2>
+
+      <% if @nombre.documento.attached? %>
+        <p><%= @nombre.documento.filename %></p>
+        <%= link_to "Descargar documento", rails_blob_path(@nombre.documento, disposition: "attachment"), class: "btn" %>
+      <% else %>
+        <p>No hay documento subido</p>
+      <% end %>
+
+    </div>
+
+  <% else %>
+
+    <p style="text-align:center;">No hay tesis registrada</p>
+
+  <% end %>
+
+</div>

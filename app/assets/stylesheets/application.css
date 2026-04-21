@@ -1,6 +1,6 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f6f8;
+  background: linear-gradient(135deg, #eef2f7, #d9e2ec);
   margin: 0;
 }
 
@@ -10,12 +10,10 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-
-  background-size: 350px; /* tamaño del logo */
+  background-size: 350px;
   background-repeat: no-repeat;
   background-position: center;
-
-  opacity: 0.12; /* visibilidad */
+  opacity: 0.08;
   z-index: -1;
   pointer-events: none;
 }
@@ -27,6 +25,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .logo {
@@ -36,43 +35,99 @@ body {
 }
 
 .logo small {
-  font-size: 14px;
+  font-size: 13px;
   display: block;
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
-.menu a {
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn {
+  background: #007bff;
   color: white;
-  margin-left: 15px;
+  padding: 8px 14px;
   text-decoration: none;
-  font-weight: bold;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+  display: inline-block;
+  font-size: 14px;
 }
 
-.menu a:hover {
-  text-decoration: underline;
+.btn:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: #dc3545;
+}
+
+.btn-danger:hover {
+  background: #a71d2a;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  min-width: 220px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 12px;
+  color: #333;
+  text-decoration: none;
+}
+
+.dropdown-content a:hover {
+  background: #f1f5f9;
+}
+
+.dropdown:hover .dropdown-content,
+.dropdown-content:hover {
+  display: block;
 }
 
 .contenedor {
-  max-width: 800px;
-  margin: 40px auto;
+  max-width: 900px;
+  margin: 50px auto;
   background: white;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
 .titulo {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  color: #1e2a38;
 }
 
 .seccion {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .seccion h2 {
-  border-bottom: 2px solid #ddd;
-  padding-bottom: 5px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+  color: #2c3e50;
 }
 
 ul {
@@ -83,35 +138,21 @@ ul {
   margin-top: 20px;
   display: flex;
   gap: 10px;
-}
-
-.btn {
-  background: #007bff;
-  color: white;
-  padding: 8px 12px;
-  text-decoration: none;
-  border-radius: 5px;
-}
-
-.btn-danger {
-  background: red;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
+  align-items: center;
 }
 
 .notice {
   text-align: center;
   color: green;
+  margin-top: 15px;
 }
 
 .integrante, .asesor {
-  border: 1px solid #e0e0e0;
+  border: 1px solid #e2e8f0;
   padding: 12px;
   margin-bottom: 12px;
-  border-radius: 8px;
-  background-color: #fafafa;
+  border-radius: 10px;
+  background-color: #f9fafb;
 }
 
 .integrante p,
@@ -119,10 +160,88 @@ ul {
   margin: 4px 0;
 }
 
-.seccion {
-  margin-bottom: 25px;
+.contenedor-login {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  align-items: flex-start;
 }
 
-.seccion h2 {
-  margin-bottom: 12px;
+.form-login {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  width: 280px;
+}
+
+.info-login {
+  background: #f1f5f9;
+  padding: 20px;
+  border-radius: 12px;
+  width: 240px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+}
+
+.usuario-box {
+  margin-bottom: 15px;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.campo {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  padding: 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.integrante input,
+.asesor input {
+  width: 200px;
+  max-width: 100%;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+}
+
+.menu-inicio {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.menu-inicio .btn {
+  width: 220px;
+  text-align: center;
+}
+
+.acciones form {
+  margin: 0;
+}
+
+.acciones form button {
+  background: #dc3545;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  display: inline-block;
+}
+
+.acciones form button:hover {
+  background: #a71d2a;
+  transform: translateY(-1px);
 }

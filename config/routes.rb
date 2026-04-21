@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
-  get "historial/index"
   get "home/index"
+
+  get "login", to: "sesiones#login"
+  post "login", to: "sesiones#procesar_login"
+  get "logout", to: "sesiones#logout"
 
   get "historial", to: "historial#index"
 
@@ -13,6 +16,7 @@ Rails.application.routes.draw do
 
     collection do
       get :buscar
+      get :revisar
     end
   end
 

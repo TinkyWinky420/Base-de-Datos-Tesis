@@ -2,20 +2,31 @@
 
   <h1 class="titulo">Sistema de Gestión de Tesis</h1>
 
-  <div class="seccion">
-    <%= link_to "Agregar Tesis", new_nombre_path, class: "btn" %>
-  </div>
+  <div class="menu-inicio">
 
-  <div class="seccion">
-    <%= link_to "Buscar Tesis", buscar_nombres_path, class: "btn" %>
-  </div>
+    <% if session[:rol] == "alumno" %>
 
-  <div class="seccion">
-    <%= link_to "Ver listado de Tesis", nombres_path, class: "btn" %>
-  </div>
+      <% unless session[:tiene_tesis] %>
+        <%= link_to "Agregar Tesis", new_nombre_path, class: "btn" %>
+      <% end %>
 
-  <div class="seccion">
-    <%= link_to "Historial de cambios", historial_path, class: "btn" %>
+      <%= link_to "Revisar Tesis", revisar_nombres_path, class: "btn" %>
+
+    <% elsif session[:rol] == "asesor" %>
+
+      <%= link_to "Buscar Tesis", buscar_nombres_path, class: "btn" %>
+      <%= link_to "Ver listado de Tesis", nombres_path, class: "btn" %>
+      <%= link_to "Historial de cambios", historial_path, class: "btn" %>
+
+    <% else %>
+
+      <%= link_to "Agregar Tesis", new_nombre_path, class: "btn" %>
+      <%= link_to "Buscar Tesis", buscar_nombres_path, class: "btn" %>
+      <%= link_to "Ver listado de Tesis", nombres_path, class: "btn" %>
+      <%= link_to "Historial de cambios", historial_path, class: "btn" %>
+
+    <% end %>
+
   </div>
 
 </div>
