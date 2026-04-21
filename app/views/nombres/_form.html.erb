@@ -2,12 +2,12 @@
 
   <div>
     <%= form.label :titulo, "Título" %>
-    <%= form.text_field :titulo %>
+    <%= form.text_field :titulo, required: true %>
   </div>
 
   <div>
     <%= form.label :descripcion, "Descripción" %>
-    <%= form.textarea :descripcion %>
+    <%= form.textarea :descripcion, required: true %>
   </div>
 
   <hr>
@@ -74,16 +74,46 @@
 
   <div>
     <%= form.label :documento, "Subir documento" %>
-    <%= form.file_field :documento %>
+    <%= form.file_field :documento,
+        accept: ".pdf,.doc,.docx",
+        required: true,
+        onchange: "validarArchivo(this)" %>
   </div>
 
   <br>
 
-  <%= form.submit "Guardar Tesis" %>
+  <%= form.submit "Guardar Tesis", onclick: "return validarFormulario()" %>
 
 <% end %>
 
 <script>
+function validarArchivo(input) {
+  const archivo = input.files[0];
+  if (!archivo) return;
+
+  const tiposPermitidos = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  ];
+
+  if (!tiposPermitidos.includes(archivo.type)) {
+    alert("No se puede subir documento, formato inválido");
+    input.value = "";
+  }
+}
+
+function validarFormulario() {
+  const archivo = document.querySelector("input[type='file']").files[0];
+
+  if (!archivo) {
+    alert("Debes subir un documento");
+    return false;
+  }
+
+  return true;
+}
+
 function agregarIntegrante() {
   const container = document.getElementById("integrantes");
   const index = container.querySelectorAll(".integrante").length;
