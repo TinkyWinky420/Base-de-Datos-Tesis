@@ -21,8 +21,8 @@ class Nombre < ApplicationRecord
   private
 
   def generar_numero_control
-    siguiente = (Nombre.maximum(:id) || 0) + 1
-    self.numero_control = format("%04d", siguiente)
+    ultimo = Nombre.unscoped.order(id: :desc).limit(1).pluck(:id).first || 0
+    self.numero_control = format("%04d", ultimo + 1)
   end
 
   def documento_obligatorio
