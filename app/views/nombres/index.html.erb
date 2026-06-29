@@ -1,22 +1,253 @@
 <div class="contenedor">
 
-  <h1 class="titulo">Listado de Tesis</h1>
+<h1 class="titulo">Listado de Tesis</h1>
 
-  <% if @nombres.any? %>
+<div class="acciones-superiores">
 
-    <% @nombres.each do |n| %>
-      <div class="seccion">
-        <p><strong>No. <%= n.numero_control %></strong></p>
-        <p><%= n.titulo %></p>
+<button
+type="button"
+class="btn"
+onclick="mostrarFiltros()"
+id="btnFiltros">
 
-        <%= link_to "Ver detalles", n, class: "btn" %>
-      </div>
-    <% end %>
+Filtrar
 
-  <% else %>
-
-    <p>No hay tesis registradas</p>
-
-  <% end %>
+</button>
 
 </div>
+
+<div
+id="panelFiltros"
+class="panel-filtros"
+style="display:none;">
+
+<%= form_with url: nombres_path, method: :get, local: true do %>
+
+<div class="campo">
+
+<label>
+Carrera
+</label>
+
+<%= select_tag :carrera,
+options_for_select(
+Nombre.distinct.pluck(:carrera).compact,
+params[:carrera]
+),
+include_blank: "Todas las carreras" %>
+
+</div>
+
+<div class="campo">
+
+<label>
+Zona
+</label>
+
+<%= select_tag :zona,
+options_for_select(
+["Zona Rosa"],
+params[:zona]
+),
+include_blank: "Seleccione una zona",
+id: "zonaFiltro" %>
+
+</div>
+
+<div
+class="campo"
+id="plantelFiltroContainer"
+style="<%= params[:zona].present? ? '' : 'display:none;' %>">
+
+<label>
+Plantel
+</label>
+
+<%= select_tag :plantel,
+options_for_select(
+params[:zona].present? ? Nombre.where(zona: params[:zona]).distinct.pluck(:plantel) : [],
+params[:plantel]
+),
+include_blank: "Seleccione un plantel",
+id: "plantelFiltro" %>
+
+</div>
+
+<div class="acciones-formulario">
+
+<%= submit_tag "Aplicar filtros", class: "btn" %>
+
+<%= link_to "Limpiar",
+nombres_path,
+class: "btn btn-danger" %>
+
+</div>
+
+<% end %>
+
+</div>
+
+<% if @nombres.any? %>
+
+<div class="lista-tesis">
+
+<% @nombres.each do |n| %>
+
+<div class="tarjeta-tesis">
+
+<div class="tarjeta-header">
+
+<div>
+
+<span class="badge-control">
+No. <%= n.numero_control %>
+</span>
+
+</div>
+
+<div>
+
+<% if n.carrera.present? %>
+
+<span class="badge-carrera">
+<%= n.carrera %>
+</span>
+
+<% end %>
+
+</div>
+
+</div>
+
+<div class="tarjeta-body">
+
+<h2 class="titulo-tesis">
+<%= n.titulo %>
+</h2>
+
+<p>
+
+<strong>Zona:</strong>
+
+<%= n.zona.present? ? n.zona : "No registrada" %>
+
+</p>
+
+<p>
+
+<strong>Plantel:</strong>
+
+<%= n.plantel.present? ? n.plantel : "No registrado" %>
+
+</p>
+
+</div>
+
+<div class="tarjeta-footer">
+
+<%= link_to "Ver detalles",
+n,
+class: "btn" %>
+
+</div>
+
+</div>
+
+<% end %>
+
+</div>
+
+<% else %>
+
+<div class="sin-registros">
+
+<h3>
+No hay tesis registradas
+</h3>
+
+<p>
+
+No existen tesis que coincidan con los filtros seleccionados.
+
+</p>
+
+<%= link_to "Limpiar filtros",
+nombres_path,
+class: "btn" %>
+
+</div>
+
+<% end %>
+
+</div>
+
+<script>
+
+function mostrarFiltros(){
+
+const panel=document.getElementById("panelFiltros");
+const boton=document.getElementById("btnFiltros");
+
+if(panel.style.display==="none"||panel.style.display===""){
+
+panel.style.display="block";
+boton.innerHTML="Ocultar filtros";
+
+}else{
+
+panel.style.display="none";
+boton.innerHTML="Filtrar";
+
+}
+
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+
+const zona=document.getElementById("zonaFiltro");
+const contenedor=document.getElementById("plantelFiltroContainer");
+const plantel=document.getElementById("plantelFiltro");
+
+const zonas={
+"Zona Rosa":["Londres"]
+};
+
+if(zona.value!==""){
+contenedor.style.display="block";
+document.getElementById("panelFiltros").style.display="block";
+document.getElementById("btnFiltros").innerHTML="Ocultar filtros";
+}
+
+zona.addEventListener("change",function(){
+
+plantel.innerHTML="";
+
+if(zona.value===""){
+
+contenedor.style.display="none";
+return;
+
+}
+
+contenedor.style.display="block";
+
+const opcion=document.createElement("option");
+opcion.value="";
+opcion.text="Seleccione un plantel";
+plantel.appendChild(opcion);
+
+zonas[zona.value].forEach(function(nombre){
+
+const nueva=document.createElement("option");
+nueva.value=nombre;
+nueva.text=nombre;
+
+plantel.appendChild(nueva);
+
+});
+
+});
+
+});
+
+</script>

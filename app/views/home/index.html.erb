@@ -1,31 +1,152 @@
-<div class="contenedor">
+<div class="contenedor inicio-contenedor">
 
-  <h1 class="titulo">Sistema de Gestión de Tesis</h1>
+  <div class="inicio-bienvenida">
 
-  <div class="menu-inicio">
+    <i class="bi bi-mortarboard inicio-icono"></i>
 
-    <% if session[:rol] == "alumno" %>
+    <h1 class="titulo">
+      Sistema de Gestión de Tesis
+    </h1>
 
-      <% unless session[:tiene_tesis] %>
-        <%= link_to "Agregar Tesis", new_nombre_path, class: "btn" %>
+    <p class="inicio-subtitulo">
+      Universidad Tres Culturas
+    </p>
+
+    <p class="inicio-descripcion">
+      Registro, consulta y administración de Tesis.
+    </p>
+
+  </div>
+
+  <div class="inicio-accesos">
+
+    <h2>
+      Accesos rápidos
+    </h2>
+
+    <div class="inicio-grid">
+
+      <% if session[:rol] == "alumno" %>
+
+        <% unless session[:tiene_tesis] %>
+
+          <%= link_to new_nombre_path, class: "inicio-card" do %>
+
+            <i class="bi bi-file-earmark-plus"></i>
+
+            <h3>Registrar tesis</h3>
+
+            <p>
+              Registra una nueva tesis.
+            </p>
+
+          <% end %>
+
+        <% end %>
+
+        <%= link_to revisar_nombres_path, class: "inicio-card" do %>
+
+          <i class="bi bi-person-badge"></i>
+
+          <h3>Mi tesis</h3>
+
+          <p>
+            Consulta el estado de tu tesis.
+          </p>
+
+        <% end %>
+
+      <% elsif session[:rol] == "asesor" %>
+
+        <%= link_to buscar_nombres_path, class: "inicio-card" do %>
+
+          <i class="bi bi-search"></i>
+
+          <h3>Buscar tesis</h3>
+
+          <p>
+            Localiza una tesis por número de control.
+          </p>
+
+        <% end %>
+
+        <%= link_to nombres_path, class: "inicio-card" do %>
+
+          <i class="bi bi-journal-bookmark"></i>
+
+          <h3>Listado</h3>
+
+          <p>
+            Consulta todas las tesis registradas.
+          </p>
+
+        <% end %>
+
+        <%= link_to historial_path, class: "inicio-card" do %>
+
+          <i class="bi bi-clock-history"></i>
+
+          <h3>Historial</h3>
+
+          <p>
+            Visualiza los cambios realizados.
+          </p>
+
+        <% end %>
+
+      <% else %>
+
+        <%= link_to new_nombre_path, class: "inicio-card" do %>
+
+          <i class="bi bi-file-earmark-plus"></i>
+
+          <h3>Registrar tesis</h3>
+
+          <p>
+            Agrega una nueva tesis.
+          </p>
+
+        <% end %>
+
+        <%= link_to buscar_nombres_path, class: "inicio-card" do %>
+
+          <i class="bi bi-search"></i>
+
+          <h3>Buscar tesis</h3>
+
+          <p>
+            Busca una tesis por número de control.
+          </p>
+
+        <% end %>
+
+        <%= link_to nombres_path, class: "inicio-card" do %>
+
+          <i class="bi bi-journal-bookmark"></i>
+
+          <h3>Listado</h3>
+
+          <p>
+            Consulta todas las tesis registradas.
+          </p>
+
+        <% end %>
+
+        <%= link_to historial_path, class: "inicio-card" do %>
+
+          <i class="bi bi-clock-history"></i>
+
+          <h3>Historial</h3>
+
+          <p>
+            Consulta las modificaciones realizadas.
+          </p>
+
+        <% end %>
+
       <% end %>
 
-      <%= link_to "Revisar Tesis", revisar_nombres_path, class: "btn" %>
-
-    <% elsif session[:rol] == "asesor" %>
-
-      <%= link_to "Buscar Tesis", buscar_nombres_path, class: "btn" %>
-      <%= link_to "Ver listado de Tesis", nombres_path, class: "btn" %>
-      <%= link_to "Historial de cambios", historial_path, class: "btn" %>
-
-    <% else %>
-
-      <%= link_to "Agregar Tesis", new_nombre_path, class: "btn" %>
-      <%= link_to "Buscar Tesis", buscar_nombres_path, class: "btn" %>
-      <%= link_to "Ver listado de Tesis", nombres_path, class: "btn" %>
-      <%= link_to "Historial de cambios", historial_path, class: "btn" %>
-
-    <% end %>
+    </div>
 
   </div>
 

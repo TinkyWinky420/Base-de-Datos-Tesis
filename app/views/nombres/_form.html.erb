@@ -1,169 +1,369 @@
 <%= form_with(model: nombre, local: true, html: { novalidate: true }) do |form| %>
 
-  <div>
-    <%= form.label :titulo, "Título" %>
-    <%= form.text_field :titulo, required: true %>
-  </div>
+<% if nombre.errors.any? %>
+<div class="errores-formulario">
 
-  <div>
-    <%= form.label :descripcion, "Descripción" %>
-    <%= form.textarea :descripcion, required: true %>
-  </div>
+<% orden = [
+"Se requiere agregar Título",
+"Se requiere agregar Descripción",
+"Se requiere elegir Carrera",
+"Se requiere agregar Nombre del Integrante",
+"Se requiere agregar Matrícula",
+"Se requiere agregar Nombre del Asesor",
+"Se requiere agregar Documento"
+] %>
 
-  <hr>
+<% orden.each do |mensaje| %>
+<% if nombre.errors.map(&:message).include?(mensaje) %>
+<p><%= mensaje %></p>
+<% end %>
+<% end %>
 
-  <h3>Integrantes</h3>
+<% nombre.errors.each do |error| %>
+<% unless orden.include?(error.message) %>
+<p><%= error.message %></p>
+<% end %>
+<% end %>
 
-  <div id="integrantes">
-    <%= form.fields_for :integrantes do |i| %>
-      <div class="integrante">
+</div>
+<% end %>
 
-        <div class="campo">
-          <label>Nombre:</label>
-          <%= i.text_field :nombre,
-              pattern: "[A-Za-záéíóúÁÉÍÓÚñÑ ]+",
-              oninvalid: "this.setCustomValidity('El nombre no puede contener numeros')",
-              oninput: "this.setCustomValidity('')",
-              required: true %>
-        </div>
+<div class="form-seccion">
 
-        <div class="campo">
-          <label>Matrícula:</label>
-          <%= i.text_field :matricula,
-              class: "sin-flechas",
-              inputmode: "numeric",
-              pattern: "[0-9]+",
-              oninvalid: "this.setCustomValidity('La matrícula solo puede contener números')",
-              oninput: "this.setCustomValidity('')",
-              required: true %>
-        </div>
+<div class="form-seccion-titulo">
+<h2>Información general</h2>
+<p>Complete los datos principales de la tesis.</p>
+</div>
 
-        <% if i.object.persisted? %>
-          <%= link_to "Eliminar integrante", motivo_integrante_path(i.object),
-            style: "display:inline-block; margin-top:8px; background:#dc3545; color:white; padding:6px 10px; border-radius:5px; text-decoration:none;" %>
-        <% end %>
+<div class="integrante">
 
-      </div>
-    <% end %>
-  </div>
+<div class="campo">
+<label>
+Título <span class="obligatorio">* OBLIGATORIO</span>
+</label>
+<%= form.text_field :titulo, placeholder: "Ingrese el título de la tesis" %>
+</div>
 
-  <button type="button" onclick="agregarIntegrante()">Agregar integrante</button>
+<div class="campo">
+<label>
+Descripción <span class="obligatorio">* OBLIGATORIO</span>
+</label>
+<%= form.textarea :descripcion, placeholder: "Describa brevemente la tesis" %>
+</div>
 
-  <hr>
+</div>
 
-  <h3>Asesores</h3>
+</div>
 
-  <div id="asesores">
-    <%= form.fields_for :asesores do |a| %>
-      <div class="asesor">
-        <div class="campo">
-          <label>Nombre:</label>
-          <%= a.text_field :nombre,
-              pattern: "[A-Za-záéíóúÁÉÍÓÚñÑ ]+",
-              oninvalid: "this.setCustomValidity('El nombre no puede contener numeros')",
-              oninput: "this.setCustomValidity('')",
-              required: true %>
-        </div>
-      </div>
-    <% end %>
-  </div>
+<div class="form-seccion">
 
-  <button type="button" onclick="agregarAsesor()">Agregar asesor</button>
+<div class="form-seccion-titulo">
+<h2>Carrera y ubicación</h2>
+<p>Seleccione la carrera, la zona y el plantel.</p>
+</div>
 
-  <hr>
+<div class="asesor">
 
-  <div>
-    <%= form.label :documento, "Subir documento" %>
-    <%= form.file_field :documento,
-        accept: ".pdf,.doc,.docx",
-        required: true,
-        onchange: "validarArchivo(this)" %>
-  </div>
+<div class="campo">
+<label>
+Carrera <span class="obligatorio">* OBLIGATORIO</span>
+</label>
 
-  <br>
+<%= form.select :carrera,
+["Ingeniería en Sistemas Computacionales"],
+{ prompt: "Seleccione una carrera" } %>
 
-  <%= form.submit "Guardar Tesis", onclick: "return validarFormulario()" %>
+</div>
+
+<div class="campo">
+<label>
+Zona <span class="obligatorio">* OBLIGATORIO</span>
+</label>
+
+<%= form.select :zona,
+@zonas.keys,
+{ prompt: "Elija su zona" },
+id: "zona_select" %>
+
+</div>
+
+<div id="plantel_container" style="display:none;">
+
+<div class="campo">
+<label>
+Plantel <span class="obligatorio">* OBLIGATORIO</span>
+</label>
+
+<%= form.select :plantel,
+[],
+{ prompt: "Elija un plantel" },
+id: "plantel_select" %>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="form-seccion">
+
+<div class="form-seccion-titulo">
+<h2>Integrantes</h2>
+<p>Agregue todos los integrantes de la tesis.</p>
+</div>
+
+<div id="integrantes">
+
+<%= form.fields_for :integrantes do |i| %>
+
+<div class="integrante">
+
+<div class="campo">
+<label>
+Nombre <span class="obligatorio">* OBLIGATORIO</span>
+</label>
+
+<%= i.text_field :nombre,
+pattern: "[A-Za-záéíóúÁÉÍÓÚñÑ ]+",
+placeholder: "Nombre completo",
+oninvalid: "this.setCustomValidity('El nombre no puede contener numeros')",
+oninput: "this.setCustomValidity('')" %>
+
+</div>
+
+<div class="campo">
+<label>
+Matrícula <span class="obligatorio">* OBLIGATORIO</span>
+</label>
+
+<%= i.text_field :matricula,
+class: "sin-flechas",
+inputmode: "numeric",
+placeholder: "Número de matrícula",
+pattern: "[0-9]+",
+oninvalid: "this.setCustomValidity('La matrícula solo puede contener números')",
+oninput: "this.setCustomValidity('')" %>
+
+</div>
+
+<% if i.object.persisted? %>
+
+<%= link_to "Eliminar integrante",
+motivo_integrante_path(i.object),
+class: "btn btn-danger" %>
+
+<% end %>
+
+</div>
+
+<% end %>
+
+</div>
+
+<div class="acciones-formulario">
+<button type="button" class="btn" onclick="agregarIntegrante()">
+Agregar integrante
+</button>
+</div>
+
+</div>
+
+<div class="form-seccion">
+
+<div class="form-seccion-titulo">
+<h2>Asesores</h2>
+<p>Agregue los asesores responsables de la tesis.</p>
+</div>
+
+<div id="asesores">
+
+<%= form.fields_for :asesores do |a| %>
+
+<div class="asesor">
+
+<div class="campo">
+
+<label>
+Nombre <span class="obligatorio">* OBLIGATORIO</span>
+</label>
+
+<%= a.text_field :nombre,
+pattern: "[A-Za-záéíóúÁÉÍÓÚñÑ ]+",
+placeholder: "Nombre del asesor",
+oninvalid: "this.setCustomValidity('El nombre no puede contener numeros')",
+oninput: "this.setCustomValidity('')" %>
+
+</div>
+
+</div>
+
+<% end %>
+
+</div>
+
+<div class="acciones-formulario">
+
+<button type="button" class="btn" onclick="agregarAsesor()">
+Agregar asesor
+</button>
+
+</div>
+
+</div>
+
+<div class="form-seccion">
+
+<div class="form-seccion-titulo">
+<h2>Documento</h2>
+<p>Adjunte el archivo de la tesis.</p>
+</div>
+
+<div class="asesor">
+
+<div class="campo">
+
+<label>
+Subir documento <span class="obligatorio">* OBLIGATORIO</span>
+</label>
+
+<%= form.file_field :documento,
+accept: ".pdf,.doc,.docx",
+onchange: "validarArchivo(this)" %>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="acciones-finales">
+
+<%= form.submit "Guardar tesis", class: "btn" %>
+
+</div>
 
 <% end %>
 
 <script>
-function validarArchivo(input) {
-  const archivo = input.files[0];
-  if (!archivo) return;
+function validarArchivo(input){
+const archivo=input.files[0];
+if(!archivo)return;
 
-  const tiposPermitidos = [
-    "application/pdf",
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  ];
+const tiposPermitidos=[
+"application/pdf",
+"application/msword",
+"application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+];
 
-  if (!tiposPermitidos.includes(archivo.type)) {
-    alert("No se puede subir documento, formato inválido");
-    input.value = "";
-  }
+if(!tiposPermitidos.includes(archivo.type)){
+alert("No se puede subir documento, formato inválido");
+input.value="";
+}
 }
 
-function validarFormulario() {
-  const archivo = document.querySelector("input[type='file']").files[0];
+function agregarIntegrante(){
+const container=document.getElementById("integrantes");
+const index=container.querySelectorAll(".integrante").length;
 
-  if (!archivo) {
-    alert("Debes subir un documento");
-    return false;
-  }
+const html=`
+<div class="integrante">
+<div class="campo">
+<label>
+Nombre <span class="obligatorio">* OBLIGATORIO</span>
+</label>
+<input
+type="text"
+name="nombre[integrantes_attributes][${index}][nombre]"
+placeholder="Nombre completo"
+pattern="[A-Za-záéíóúÁÉÍÓÚñÑ ]+"
+oninvalid="this.setCustomValidity('El nombre no puede contener numeros')"
+oninput="this.setCustomValidity('')">
+</div>
 
-  return true;
+<div class="campo">
+<label>
+Matrícula <span class="obligatorio">* OBLIGATORIO</span>
+</label>
+<input
+type="text"
+name="nombre[integrantes_attributes][${index}][matricula]"
+placeholder="Número de matrícula"
+inputmode="numeric"
+pattern="[0-9]+"
+oninvalid="this.setCustomValidity('La matrícula solo puede contener números')"
+oninput="this.setCustomValidity('')">
+</div>
+</div>
+`;
+
+container.insertAdjacentHTML("beforeend",html);
 }
 
-function agregarIntegrante() {
-  const container = document.getElementById("integrantes");
-  const index = container.querySelectorAll(".integrante").length;
+function agregarAsesor(){
+const container=document.getElementById("asesores");
+const index=container.querySelectorAll(".asesor").length;
 
-  const html = `
-    <div class="integrante">
-      <div class="campo">
-        <label>Nombre:</label>
-        <input type="text"
-          pattern="[A-Za-záéíóúÁÉÍÓÚñÑ ]+"
-          oninvalid="this.setCustomValidity('El nombre no puede contener numeros')"
-          oninput="this.setCustomValidity('')"
-          required
-          name="nombre[integrantes_attributes][${index}][nombre]">
-      </div>
+const html=`
+<div class="asesor">
+<div class="campo">
+<label>
+Nombre <span class="obligatorio">* OBLIGATORIO</span>
+</label>
+<input
+type="text"
+name="nombre[asesores_attributes][${index}][nombre]"
+placeholder="Nombre del asesor"
+pattern="[A-Za-záéíóúÁÉÍÓÚñÑ ]+"
+oninvalid="this.setCustomValidity('El nombre no puede contener numeros')"
+oninput="this.setCustomValidity('')">
+</div>
+</div>
+`;
 
-      <div class="campo">
-        <label>Matrícula:</label>
-        <input type="text"
-          inputmode="numeric"
-          pattern="[0-9]+"
-          oninvalid="this.setCustomValidity('La matrícula solo puede contener números')"
-          oninput="this.setCustomValidity('')"
-          required
-          name="nombre[integrantes_attributes][${index}][matricula]">
-      </div>
-    </div>
-  `;
-
-  container.insertAdjacentHTML("beforeend", html);
+container.insertAdjacentHTML("beforeend",html);
 }
 
-function agregarAsesor() {
-  const container = document.getElementById("asesores");
-  const index = container.querySelectorAll(".asesor").length;
+document.addEventListener("DOMContentLoaded", function(){
 
-  const html = `
-    <div class="asesor">
-      <div class="campo">
-        <label>Nombre:</label>
-        <input type="text"
-          pattern="[A-Za-záéíóúÁÉÍÓÚñÑ ]+"
-          oninvalid="this.setCustomValidity('El nombre no puede contener numeros')"
-          oninput="this.setCustomValidity('')"
-          required
-          name="nombre[asesores_attributes][${index}][nombre]">
-      </div>
-    </div>
-  `;
+const zona=document.getElementById("zona_select");
+const contenedor=document.getElementById("plantel_container");
+const plantel=document.getElementById("plantel_select");
 
-  container.insertAdjacentHTML("beforeend", html);
+const zonas=<%= raw @zonas.to_json %>;
+
+function cargarPlanteles(){
+
+const zonaSeleccionada=zona.value;
+
+plantel.innerHTML="";
+
+if(zonaSeleccionada===""){
+contenedor.style.display="none";
+return;
 }
+
+contenedor.style.display="block";
+
+const opcionInicial=document.createElement("option");
+opcionInicial.value="";
+opcionInicial.text="Elija un plantel";
+plantel.appendChild(opcionInicial);
+
+zonas[zonaSeleccionada].forEach(function(nombre){
+
+const opcion=document.createElement("option");
+opcion.value=nombre;
+opcion.text=nombre;
+
+plantel.appendChild(opcion);
+
+});
+
+}
+
+zona.addEventListener("change",cargarPlanteles);
+
+});
 </script>

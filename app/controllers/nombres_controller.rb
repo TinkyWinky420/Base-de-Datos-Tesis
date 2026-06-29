@@ -1,19 +1,74 @@
 class NombresController < ApplicationController
-  before_action :set_nombre, only: %i[ show destroy motivo clave confirmar_eliminacion ]
+  before_action :set_nombre, only: %i[
+    show
+    documento
+    descargar_documento
+    destroy
+    motivo
+    clave
+    confirmar_eliminacion
+  ]
+
   before_action :bloquear_creacion, only: [:new, :create]
 
-  def index
-    @nombres = Nombre.all
+ def index
+  @nombres = Nombre.all
+
+  if params[:carrera].present?
+    @nombres = @nombres.where(carrera: params[:carrera])
   end
+
+  if params[:zona].present?
+    @nombres = @nombres.where(zona: params[:zona])
+  end
+
+  if params[:plantel].present?
+    @nombres = @nombres.where(plantel: params[:plantel])
+  end
+end
 
   def show
   end
 
-  def new
-    @nombre = Nombre.new
-    @nombre.integrantes.build
-    @nombre.asesores.build
+  def documento
+    unless @nombre.documento.attached?
+      redirect_to @nombre, alert: "No existe un documento para esta tesis."
+      return
+    end
+
+    if @nombre.es_pdf?
+      render :documento
+
+    elsif @nombre.es_word?
+      # Aquí irá la función para documentos Word.
+      # Por ahora solo regresamos a la tesis con un mensaje.
+      redirect_to @nombre, notice: "Se detectó un documento Word."
+
+    else
+      redirect_to @nombre, alert: "Formato de documento no soportado."
+    end
   end
+
+  def descargar_documento
+    unless ["asesor", "administrativo"].include?(session[:rol])
+      redirect_to documento_nombre_path(@nombre), alert: "No tienes permiso para descargar este documento."
+      return
+    end
+
+    # Aquí posteriormente validaremos el código de seguridad.
+
+    redirect_to rails_blob_path(
+      @nombre.documento,
+      disposition: "attachment"
+    )
+  end
+
+def new
+  @nombre = Nombre.new
+  @nombre.integrantes.build
+  @nombre.asesores.build
+  @zonas = Nombre::ZONAS
+end
 
   def create
     if session[:rol] == "alumno" && session[:tiene_tesis]
@@ -37,6 +92,7 @@ class NombresController < ApplicationController
 
       redirect_to @nombre, notice: "Tesis creada correctamente."
     else
+      @zonas = ZONAS
       puts @nombre.errors.full_messages
       render :new, status: :unprocessable_entity
     end
@@ -99,13 +155,17 @@ class NombresController < ApplicationController
     @nombre = Nombre.find(params[:id])
   end
 
-  def nombre_params
-    params.require(:nombre).permit(
-      :titulo,
-      :descripcion,
-      :documento,
-      integrantes_attributes: [:id, :nombre, :matricula, :_destroy],
-      asesores_attributes: [:id, :nombre, :_destroy]
-    )
-  end
+def nombre_params
+  params.require(:nombre).permit(
+    :titulo,
+    :descripcion,
+    :carrera,
+    :zona,
+    :plantel,
+    :documento,
+    integrantes_attributes: [:id, :nombre, :matricula, :_destroy],
+    asesores_attributes: [:id, :nombre, :_destroy]
+  )
+end
+
 end

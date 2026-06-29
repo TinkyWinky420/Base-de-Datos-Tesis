@@ -1,4 +1,9 @@
 class Nombre < ApplicationRecord
+  ZONAS = {
+  "Zona Rosa" => [
+    "Londres"
+  ]
+}.freeze
   has_many :integrantes, foreign_key: "tesis_id", dependent: :destroy
   has_many :asesores, class_name: "Asesor", foreign_key: "tesis_id", dependent: :destroy
 
@@ -10,13 +15,34 @@ class Nombre < ApplicationRecord
   before_create :generar_numero_control
 
   validates :numero_control, uniqueness: true
-  validates :titulo, presence: true
-  validates :descripcion, presence: true
+
+  validates :titulo,
+    presence: { message: "Se requiere agregar Título" }
+
+  validates :descripcion,
+    presence: { message: "Se requiere agregar Descripción" }
+
+  validates :carrera,
+    presence: { message: "Se requiere elegir Carrera" }
 
   validate :documento_obligatorio
   validate :validar_tipo_documento
   validate :validar_integrantes
   validate :validar_asesores
+
+  def es_pdf?
+    documento.attached? &&
+      documento.content_type == "application/pdf"
+  end
+
+  def es_word?
+    return false unless documento.attached?
+
+    [
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ].include?(documento.content_type)
+  end
 
   private
 
@@ -27,7 +53,7 @@ class Nombre < ApplicationRecord
 
   def documento_obligatorio
     unless documento.attached?
-      errors.add(:documento, "es obligatorio")
+      errors.add(:documento, "Se requiere agregar Documento")
     end
   end
 
@@ -41,19 +67,19 @@ class Nombre < ApplicationRecord
     ]
 
     unless tipos_permitidos.include?(documento.content_type)
-      errors.add(:documento, "no se puede subir documento, formato inválido")
+      errors.add(:documento, "No se puede subir documento, formato inválido")
     end
   end
 
   def validar_integrantes
     if integrantes.reject { |i| i.marked_for_destruction? }.empty?
-      errors.add(:integrantes, "debe haber al menos un integrante")
+      errors.add(:integrantes, "Se requiere agregar Integrante")
     end
   end
 
   def validar_asesores
     if asesores.reject { |a| a.marked_for_destruction? }.empty?
-      errors.add(:asesores, "debe haber al menos un asesor")
+      errors.add(:asesores, "Se requiere agregar Asesor")
     end
   end
 end

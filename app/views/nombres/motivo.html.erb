@@ -1,14 +1,66 @@
-<h2>Motivo de eliminación de tesis</h2>
+<div class="contenedor">
 
-<%= form_with url: clave_nombre_path(@nombre), method: :post do %>
+  <div class="cabecera-tesis">
 
-  <div>
-    <label>Escribe el motivo:</label>
-    <textarea name="motivo" required></textarea>
+    <h1 class="titulo">
+      Eliminar tesis
+    </h1>
+
+    <div class="datos-generales">
+
+      <div class="dato">
+        <span class="etiqueta">Título:</span>
+        <span class="valor"><%= @nombre.titulo %></span>
+      </div>
+
+      <div class="dato">
+        <span class="etiqueta">Número de control:</span>
+        <span class="valor"><%= @nombre.numero_control %></span>
+      </div>
+
+    </div>
+
   </div>
 
-  <br>
+  <div class="seccion">
 
-  <%= submit_tag "Continuar" %>
+    <h2>Motivo de la eliminación</h2>
 
-<% end %>
+    <div class="contenido-seccion">
+
+      <p>
+        Escriba el motivo por el cual desea eliminar esta tesis.
+      </p>
+
+      <%= form_with url: clave_nombre_path(@nombre), method: :post do %>
+
+        <div class="campo">
+
+          <%= label_tag :motivo, "Motivo" %>
+
+          <%= text_area_tag :motivo,
+          nil,
+          rows: 6,
+          required: true,
+          placeholder: "Escriba aquí el motivo de la eliminación..." %>
+
+        </div>
+
+        <div class="acciones">
+
+          <%= link_to "Cancelar",
+          nombre_path(@nombre),
+          class: "btn" %>
+
+          <%= submit_tag "Continuar",
+          class: "btn btn-danger" %>
+
+        </div>
+
+      <% end %>
+
+    </div>
+
+  </div>
+
+</div>

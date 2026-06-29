@@ -1,32 +1,73 @@
-<% @historiales.each do |h| %>
-  <div class="seccion">
+<div class="contenedor">
 
-    <p><strong><%= h.accion %></strong></p>
+  <div class="cabecera-tesis">
 
-    <% if h.descripcion.include?("Se eliminó la tesis") %>
-      <% partes = h.descripcion.split(".") %>
-      <% datos = partes[0] %>
-      <% motivo = partes[1] %>
-
-      <% nombre = datos.match(/tesis (.*?) con/)[1] rescue "" %>
-      <% numero = datos.match(/número (.*?)$/)[1] rescue "" %>
-
-      <p><strong>Nombre:</strong> <%= nombre %></p>
-      <p><strong>Número de seguimiento:</strong> <%= numero %></p>
-      <p><strong>Motivo:</strong> <%= motivo.to_s.gsub("Razón:", "").strip %></p>
-
-    <% elsif h.descripcion.include?("Se creó la tesis") %>
-      <% nombre = h.descripcion.match(/tesis (.*?) con/)[1] rescue "" %>
-      <% numero = h.descripcion.match(/número (.*?)$/)[1] rescue "" %>
-
-      <p><strong>Nombre:</strong> <%= nombre %></p>
-      <p><strong>Número de seguimiento:</strong> <%= numero %></p>
-    <% end %>
-
-    <p><small><%= h.created_at.strftime("%d/%m/%Y %H:%M") %></small></p>
+    <h1 class="titulo">
+      Historial de cambios
+    </h1>
 
   </div>
 
-  <hr>
+  <% @historiales.each do |h| %>
 
-<% end %>
+    <div class="seccion">
+
+      <h2><%= h.accion %></h2>
+
+      <div class="contenido-seccion">
+
+        <% if h.descripcion.include?("Se eliminó la tesis") %>
+
+          <% partes = h.descripcion.split(".") %>
+          <% datos = partes[0] %>
+          <% motivo = partes[1] %>
+
+          <% nombre = datos.match(/tesis (.*?) con/)[1] rescue "" %>
+          <% numero = datos.match(/número (.*?)$/)[1] rescue "" %>
+
+          <p>
+            <strong>Nombre:</strong>
+            <span class="dato-resaltado"><%= nombre %></span>
+          </p>
+
+          <p>
+            <strong>Número de seguimiento:</strong>
+            <span class="dato-resaltado"><%= numero %></span>
+          </p>
+
+          <p>
+            <strong>Motivo:</strong>
+            <span class="dato-resaltado"><%= motivo.to_s.gsub("Razón:", "").strip %></span>
+          </p>
+
+        <% elsif h.descripcion.include?("Se creó la tesis") %>
+
+          <% nombre = h.descripcion.match(/tesis (.*?) con/)[1] rescue "" %>
+          <% numero = h.descripcion.match(/número (.*?)$/)[1] rescue "" %>
+
+          <p>
+            <strong>Nombre:</strong>
+            <span class="dato-resaltado"><%= nombre %></span>
+          </p>
+
+          <p>
+            <strong>Número de seguimiento:</strong>
+            <span class="dato-resaltado"><%= numero %></span>
+          </p>
+
+        <% end %>
+
+        <p class="fecha-historial">
+          <strong>Fecha:</strong>
+          <span class="dato-resaltado">
+            <%= h.created_at.strftime("%d/%m/%Y %H:%M") %>
+          </span>
+        </p>
+
+      </div>
+
+    </div>
+
+  <% end %>
+
+</div>

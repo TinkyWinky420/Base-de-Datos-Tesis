@@ -1,38 +1,102 @@
-<h1 class="titulo">Iniciar sesión</h1>
+<div class="login-page">
 
-<div class="contenedor-login">
+  <div class="login-card">
 
-  <div class="form-login">
+    <div class="login-header">
+
+      <div class="login-icono">
+        <i class="bi bi-person-circle"></i>
+      </div>
+
+      <h1 class="titulo">
+        Iniciar sesión
+      </h1>
+
+      <p class="login-subtitulo">
+        Sistema de Gestión de Tesis
+      </p>
+
+      <p class="login-universidad">
+        Universidad Tres Culturas
+      </p>
+
+    </div>
+
     <%= form_with url: login_path, method: :post, local: true do %>
 
       <div class="campo">
-        <label>Usuario</label>
-        <%= text_field_tag :usuario, nil, class: "input" %>
+
+        <label>
+          Usuario
+        </label>
+
+        <%= text_field_tag :usuario,
+            nil,
+            class: "input",
+            placeholder: "Ingrese su usuario" %>
+
       </div>
 
       <div class="campo">
-        <label>Contraseña</label>
-        <%= password_field_tag :password, nil, class: "input" %>
+
+        <label>
+          Contraseña
+        </label>
+
+        <%= password_field_tag :password,
+            nil,
+            class: "input",
+            placeholder: "Ingrese su contraseña" %>
+
       </div>
 
-      <%= submit_tag "Ingresar", class: "btn" %>
+      <%= submit_tag "Ingresar",
+          class: "btn login-btn" %>
 
     <% end %>
+
   </div>
 
-  <div class="info-login">
-    <h3>Accesos rápidos</h3>
+  <div class="login-info">
 
-    <div class="usuario-box">
-      <p><strong>Alumno</strong></p>
-      <p>usuario: alumno</p>
-      <p>contraseña: 1234</p>
+    <h2>
+      Accesos de prueba
+    </h2>
+
+    <div class="login-box">
+
+      <div class="login-box-icono">
+        <i class="bi bi-mortarboard"></i>
+      </div>
+
+      <div>
+
+        <h3>Alumno</h3>
+
+        <p><strong>Usuario:</strong> alumno</p>
+
+        <p><strong>Contraseña:</strong> 1234</p>
+
+      </div>
+
     </div>
 
-    <div class="usuario-box">
-      <p><strong>Asesor</strong></p>
-      <p>usuario: asesor</p>
-      <p>contraseña: 1234</p>
+    <div class="login-box">
+
+      <div class="login-box-icono">
+        <i class="bi bi-person-workspace"></i>
+      </div>
+
+      <div>
+
+        <h3>Asesor</h3>
+
+        <p><strong>Usuario:</strong> asesor</p>
+
+        <p><strong>Contraseña:</strong> 1234</p>
+
+      </div>
+
     </div>
 
   </div>

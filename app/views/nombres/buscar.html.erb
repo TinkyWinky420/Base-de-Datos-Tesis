@@ -1,24 +1,94 @@
-<h1>Buscar Tesis</h1>
+<div class="contenedor">
 
-<%= form_with url: buscar_nombres_path, method: :get do %>
-  <div>
-    <%= label_tag :numero_control, "Número de control" %>
-    <%= text_field_tag :numero_control %>
+  <div class="cabecera-tesis">
+
+    <h1 class="titulo">
+      Buscar tesis
+    </h1>
+
+    <div class="contenido-seccion">
+
+      <%= form_with url: buscar_nombres_path, method: :get do %>
+
+        <div class="campo">
+
+          <%= label_tag :numero_control, "Número de control" %>
+
+          <%= text_field_tag :numero_control,
+          params[:numero_control],
+          placeholder: "Ej. 0001" %>
+
+        </div>
+
+        <%= submit_tag "Buscar", class: "btn" %>
+
+      <% end %>
+
+    </div>
+
   </div>
 
-  <div>
-    <%= submit_tag "Buscar" %>
-  </div>
-<% end %>
+  <% if @nombre %>
 
-<hr>
+    <div class="seccion">
 
-<% if @nombre %>
-  <h2>Resultado</h2>
-  <p><strong>Número de control:</strong> <%= @nombre.numero_control %></p>
-  <p><strong>Título:</strong> <%= @nombre.titulo %></p>
+      <h2>Resultado de la búsqueda</h2>
 
-  <%= link_to "Ver tesis", @nombre %>
-<% elsif params[:numero_control] %>
-  <p>No se encontró ninguna tesis</p>
-<% end %>
+      <div class="contenido-seccion">
+
+        <p>
+          <strong>Número de control:</strong>
+          <span class="dato-resaltado">
+            <%= @nombre.numero_control %>
+          </span>
+        </p>
+
+        <p>
+          <strong>Título:</strong>
+          <span class="dato-resaltado">
+            <%= @nombre.titulo %>
+          </span>
+        </p>
+
+        <% if @nombre.carrera.present? %>
+
+          <p>
+            <strong>Carrera:</strong>
+            <span class="dato-resaltado">
+              <%= @nombre.carrera %>
+            </span>
+          </p>
+
+        <% end %>
+
+        <div style="margin-top:25px;">
+
+          <%= link_to "Ver detalles de la tesis",
+          @nombre,
+          class: "btn" %>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  <% elsif params[:numero_control].present? %>
+
+    <div class="seccion">
+
+      <h2>Resultado de la búsqueda</h2>
+
+      <div class="contenido-seccion">
+
+        <p>
+          No se encontró ninguna tesis con ese número de control.
+        </p>
+
+      </div>
+
+    </div>
+
+  <% end %>
+
+</div>

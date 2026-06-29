@@ -2,70 +2,140 @@
 
 <div class="contenedor">
 
-  <h1 class="titulo"><%= @nombre.titulo %></h1>
+  <div class="cabecera-tesis">
 
-  <div class="seccion">
-    <h2>Número de control</h2>
-    <p><strong><%= @nombre.numero_control %></strong></p>
+    <h1 class="titulo"><%= @nombre.titulo %></h1>
+
+    <div class="datos-generales">
+
+      <div class="dato">
+        <span class="etiqueta">NUMERO DE CONTROL: </span>
+        <span class="valor"><%= @nombre.numero_control %></span>
+      </div>
+
+      <div class="dato">
+        <span class="etiqueta">CARRERA: </span>
+        <span class="valor"><%= @nombre.carrera %></span>
+      </div>
+
+    </div>
+
   </div>
 
   <div class="seccion">
+
     <h2>Descripción</h2>
-    <p><%= @nombre.descripcion %></p>
+
+    <div class="contenido-seccion">
+      <p><%= @nombre.descripcion %></p>
+    </div>
+
   </div>
 
   <div class="seccion">
+
     <h2>Integrantes</h2>
 
-    <% @nombre.integrantes.each do |i| %>
-      <div class="integrante">
-        <p><strong>Nombre:</strong> <%= i.nombre %></p>
-        <p><strong>Matrícula:</strong> <%= i.matricula %></p>
-      </div>
-    <% end %>
+    <div class="contenido-seccion">
 
-    <% if @nombre.integrantes.empty? %>
-      <p>No hay integrantes registrados</p>
-    <% end %>
+      <% @nombre.integrantes.each do |i| %>
+
+        <div class="integrante">
+
+          <p>
+            <strong>Nombre:</strong>
+            <span class="dato-resaltado"><%= i.nombre %></span>
+          </p>
+
+          <p>
+            <strong>Matrícula:</strong>
+            <span class="dato-resaltado"><%= i.matricula %></span>
+          </p>
+
+        </div>
+
+      <% end %>
+
+      <% if @nombre.integrantes.empty? %>
+        <p>No hay integrantes registrados.</p>
+      <% end %>
+
+    </div>
 
   </div>
 
   <div class="seccion">
+
     <h2>Asesores</h2>
 
-    <% @nombre.asesores.each do |a| %>
-      <div class="asesor">
-        <p><strong>Nombre:</strong> <%= a.nombre %></p>
-      </div>
-    <% end %>
+    <div class="contenido-seccion">
 
-    <% if @nombre.asesores.empty? %>
-      <p>No hay asesores registrados</p>
-    <% end %>
+      <% @nombre.asesores.each do |a| %>
+
+        <div class="asesor">
+
+          <p>
+            <strong>Nombre:</strong>
+            <span class="dato-resaltado"><%= a.nombre %></span>
+          </p>
+
+        </div>
+
+      <% end %>
+
+      <% if @nombre.asesores.empty? %>
+        <p>No hay asesores registrados.</p>
+      <% end %>
+
+    </div>
 
   </div>
 
   <div class="seccion">
+
     <h2>Documento</h2>
 
-    <% if @nombre.documento.attached? %>
-      <p><%= @nombre.documento.filename %></p>
+    <div class="contenido-seccion">
 
-      <p>
-        <%= link_to "Descargar documento", rails_blob_path(@nombre.documento, disposition: "attachment"), class: "btn" %>
-      </p>
-    <% else %>
-      <p>No hay documento subido</p>
-    <% end %>
+      <% if @nombre.documento.attached? %>
+
+        <p>
+          <strong>Archivo:</strong>
+          <span class="dato-resaltado">
+            <%= @nombre.documento.filename %>
+          </span>
+        </p>
+
+        <% if @nombre.es_pdf? %>
+
+          <div style="margin-top:20px;">
+            <%= link_to "Ver documento",
+            documento_nombre_path(@nombre),
+            class: "btn" %>
+          </div>
+
+        <% end %>
+
+      <% else %>
+
+        <p>No hay documento registrado.</p>
+
+      <% end %>
+
+    </div>
 
   </div>
 
   <div class="acciones">
-    <%= link_to "Volver", nombres_path, class: "btn" %>
+
+    <%= link_to "Volver a tesis",
+    nombres_path,
+    class: "btn" %>
 
     <%= link_to "Eliminar tesis",
-        motivo_nombre_path(@nombre),
-        class: "btn btn-danger" %>
+    motivo_nombre_path(@nombre),
+    class: "btn btn-danger" %>
+
   </div>
 
 </div>

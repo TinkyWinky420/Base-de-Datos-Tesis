@@ -1,76 +1,177 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>TesisApp</title>
+    <title>UTC</title>
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   </head>
 
   <body>
 
-    <nav class="navbar">
-      <h2 class="logo">
-        Sistema de gestion de tesis de Ingeniería en Sistemas Computacionales
-        <small>Universidad Tres Culturas</small>
-      </h2>
+    <header class="topbar">
 
-      <div class="menu">
+      <div class="topbar-left">
 
-        <%= link_to "Inicio", root_path, class: "btn" %>
+        <button id="menu-toggle" class="menu-toggle">
+          <i class="bi bi-list"></i>
+        </button>
 
-        <% unless controller_name == "sesiones" %>
+        <div class="topbar-logo">
+          <h1>UTC</h1>
+          <span>Universidad Tres Culturas</span>
+        </div>
 
-          <div class="dropdown">
-            <button class="btn">Menú</button>
+      </div>
 
-            <div class="dropdown-content">
-
-              <% if session[:rol] == "alumno" %>
-
-                <% unless session[:tiene_tesis] %>
-                  <%= link_to "Agregar Tesis", new_nombre_path %>
-                <% end %>
-
-                <%= link_to "Revisar Tesis", revisar_nombres_path %>
-
-              <% elsif session[:rol] == "asesor" %>
-
-                <%= link_to "Buscar", buscar_nombres_path %>
-                <%= link_to "Historial de cambios", historial_path %>
-                <%= link_to "Ver listado de Tesis", nombres_path %>
-
-              <% else %>
-
-                <%= link_to "Agregar Tesis", new_nombre_path %>
-                <%= link_to "Buscar", buscar_nombres_path %>
-                <%= link_to "Ver listado de Tesis", nombres_path %>
-                <%= link_to "Historial de cambios", historial_path %>
-
-              <% end %>
-
-            </div>
-          </div>
-
-        <% end %>
+      <div class="topbar-user">
 
         <% if session[:rol].present? %>
-          <%= link_to "Cerrar sesión", logout_path, class: "btn" %>
+
+          <div class="dropdown">
+
+            <button class="btn">
+              <%= session[:rol].capitalize %>
+            </button>
+
+            <div class="dropdown-content">
+              <%= link_to "Cerrar sesión", logout_path %>
+            </div>
+
+          </div>
+
         <% else %>
-          <%= link_to "Iniciar sesión", login_path, class: "btn" %>
+
+          <%= link_to "Acceder", login_path, class: "btn" %>
+
         <% end %>
 
       </div>
-    </nav>
 
-    <div class="contenedor">
-      <%= yield %>
+    </header>
+
+    <div class="layout">
+
+      <aside id="sidebar" class="sidebar">
+
+        <%= link_to root_path, class: "sidebar-btn" do %>
+          <span class="icono">
+            <i class="bi bi-house-door"></i>
+          </span>
+          <span class="texto">Inicio</span>
+        <% end %>
+
+        <% unless controller_name == "sesiones" %>
+
+          <% if session[:rol] == "alumno" %>
+
+            <% unless session[:tiene_tesis] %>
+
+              <%= link_to new_nombre_path, class: "sidebar-btn" do %>
+                <span class="icono">
+                  <i class="bi bi-file-earmark-plus"></i>
+                </span>
+                <span class="texto">Registrar tesis</span>
+              <% end %>
+
+            <% end %>
+
+            <%= link_to revisar_nombres_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-person-badge"></i>
+              </span>
+              <span class="texto">Revisar mi tesis</span>
+            <% end %>
+
+            <%= link_to buscar_nombres_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-search"></i>
+              </span>
+              <span class="texto">Buscar tesis</span>
+            <% end %>
+
+          <% elsif session[:rol] == "asesor" %>
+
+            <%= link_to nombres_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-journal-bookmark"></i>
+              </span>
+              <span class="texto">Listado de tesis</span>
+            <% end %>
+
+            <%= link_to buscar_nombres_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-search"></i>
+              </span>
+              <span class="texto">Buscar tesis</span>
+            <% end %>
+
+            <%= link_to historial_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-clock-history"></i>
+              </span>
+              <span class="texto">Historial</span>
+            <% end %>
+
+          <% else %>
+
+            <%= link_to new_nombre_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-file-earmark-plus"></i>
+              </span>
+              <span class="texto">Registrar tesis</span>
+            <% end %>
+
+            <%= link_to nombres_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-journal-bookmark"></i>
+              </span>
+              <span class="texto">Listado de tesis</span>
+            <% end %>
+
+            <%= link_to buscar_nombres_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-search"></i>
+              </span>
+              <span class="texto">Buscar tesis</span>
+            <% end %>
+
+            <%= link_to historial_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-clock-history"></i>
+              </span>
+              <span class="texto">Historial</span>
+            <% end %>
+
+          <% end %>
+
+        <% end %>
+
+      </aside>
+
+      <main class="contenido">
+        <%= yield %>
+      </main>
+
     </div>
 
-    <div class="footer-logo">
-      <img src="<%= asset_path('utc.png') %>" alt="UTC Logo">
-    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+
+        const boton = document.getElementById("menu-toggle");
+        const sidebar = document.getElementById("sidebar");
+
+        boton.addEventListener("click", function () {
+          sidebar.classList.toggle("expandido");
+        });
+
+      });
+    </script>
 
   </body>
 </html>

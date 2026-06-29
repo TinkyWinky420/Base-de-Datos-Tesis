@@ -12,6 +12,9 @@ Rails.application.routes.draw do
       get :motivo
       post :clave
       post :confirmar_eliminacion
+
+      get :documento
+      post :descargar_documento
     end
 
     collection do
