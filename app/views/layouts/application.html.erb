@@ -96,6 +96,28 @@
             <% end %>
 
           <% elsif session[:rol] == "asesor" %>
+          <%= link_to nombres_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-journal-bookmark"></i>
+              </span>
+              <span class="texto">Listado de tesis</span>
+            <% end %>
+
+            <%= link_to buscar_nombres_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-search"></i>
+              </span>
+              <span class="texto">Buscar tesis</span>
+            <% end %>
+
+            <%= link_to historial_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-clock-history"></i>
+              </span>
+              <span class="texto">Historial</span>
+            <% end %>
+
+          <% elsif session[:rol] == "administrativo" %>
 
             <%= link_to nombres_path, class: "sidebar-btn" do %>
               <span class="icono">
@@ -116,6 +138,13 @@
                 <i class="bi bi-clock-history"></i>
               </span>
               <span class="texto">Historial</span>
+            <% end %>
+
+            <%= link_to zonas_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-geo-alt"></i>
+              </span>
+              <span class="texto">Zonas y Planteles</span>
             <% end %>
 
           <% else %>
@@ -153,8 +182,7 @@
         <% end %>
 
       </aside>
-
-      <main class="contenido">
+            <main class="contenido">
         <%= yield %>
       </main>
 

@@ -11,21 +11,21 @@ class NombresController < ApplicationController
 
   before_action :bloquear_creacion, only: [:new, :create]
 
- def index
-  @nombres = Nombre.all
+  def index
+    @nombres = Nombre.all
 
-  if params[:carrera].present?
-    @nombres = @nombres.where(carrera: params[:carrera])
-  end
+    if params[:carrera].present?
+      @nombres = @nombres.where(carrera: params[:carrera])
+    end
 
-  if params[:zona].present?
-    @nombres = @nombres.where(zona: params[:zona])
-  end
+    if params[:zona].present?
+      @nombres = @nombres.where(zona: params[:zona])
+    end
 
-  if params[:plantel].present?
-    @nombres = @nombres.where(plantel: params[:plantel])
+    if params[:plantel].present?
+      @nombres = @nombres.where(plantel: params[:plantel])
+    end
   end
-end
 
   def show
   end
@@ -40,8 +40,6 @@ end
       render :documento
 
     elsif @nombre.es_word?
-      # Aquí irá la función para documentos Word.
-      # Por ahora solo regresamos a la tesis con un mensaje.
       redirect_to @nombre, notice: "Se detectó un documento Word."
 
     else
@@ -55,20 +53,18 @@ end
       return
     end
 
-    # Aquí posteriormente validaremos el código de seguridad.
-
     redirect_to rails_blob_path(
       @nombre.documento,
       disposition: "attachment"
     )
   end
 
-def new
-  @nombre = Nombre.new
-  @nombre.integrantes.build
-  @nombre.asesores.build
-  @zonas = Nombre::ZONAS
-end
+  def new
+    @nombre = Nombre.new
+    @nombre.integrantes.build
+    @nombre.asesores.build
+    @zonas = Nombre::ZONAS
+  end
 
   def create
     if session[:rol] == "alumno" && session[:tiene_tesis]
@@ -92,7 +88,7 @@ end
 
       redirect_to @nombre, notice: "Tesis creada correctamente."
     else
-      @zonas = ZONAS
+      @zonas = Nombre::ZONAS
       puts @nombre.errors.full_messages
       render :new, status: :unprocessable_entity
     end
@@ -134,14 +130,87 @@ end
     redirect_to motivo_nombre_path(@nombre)
   end
 
-  def buscar
+def buscar
+  @nombre = nil
+  @nombres = []
+  case params[:tipo]
+  when "numero"
     if params[:numero_control].present?
       numero = params[:numero_control].to_i
       numero_formateado = format("%04d", numero)
-
-      @nombre = Nombre.find_by(numero_control: numero_formateado)
+      @nombre = Nombre.find_by(
+        numero_control: numero_formateado
+      )
+    end
+  when "integrante"
+    if params[:nombre].present?
+      @nombres = Nombre
+                    .joins(:integrantes)
+                    .where(
+                      integrantes: {
+                        nombre: params[:nombre]
+                      }
+                    )
+                    .distinct
+    end
+  when "asesor"
+    if params[:nombre].present?
+      @nombres = Nombre
+                    .joins(:asesores)
+                    .where(
+                      asesores: {
+                        nombre: params[:nombre]
+                      }
+                    )
+                    .distinct
     end
   end
+end
+
+def sugerencias
+  texto = params[:q].to_s.downcase
+  tipo = params[:tipo].to_s
+
+  nombres = case tipo
+
+  when "integrante"
+
+    consulta = Integrante
+                  .distinct
+                  .order(:nombre)
+
+    unless texto.blank?
+      consulta = consulta.where(
+        "LOWER(nombre) LIKE ?",
+        "#{texto}%"
+      )
+    end
+
+    consulta.pluck(:nombre)
+
+  when "asesor"
+
+    consulta = Asesor
+                  .distinct
+                  .order(:nombre)
+
+    unless texto.blank?
+      consulta = consulta.where(
+        "LOWER(nombre) LIKE ?",
+        "#{texto}%"
+      )
+    end
+
+    consulta.pluck(:nombre)
+
+  else
+
+    []
+
+  end
+
+  render json: nombres
+end
 
   private
 
@@ -155,17 +224,16 @@ end
     @nombre = Nombre.find(params[:id])
   end
 
-def nombre_params
-  params.require(:nombre).permit(
-    :titulo,
-    :descripcion,
-    :carrera,
-    :zona,
-    :plantel,
-    :documento,
-    integrantes_attributes: [:id, :nombre, :matricula, :_destroy],
-    asesores_attributes: [:id, :nombre, :_destroy]
-  )
-end
-
+  def nombre_params
+    params.require(:nombre).permit(
+      :titulo,
+      :descripcion,
+      :carrera,
+      :zona,
+      :plantel,
+      :documento,
+      integrantes_attributes: [:id, :nombre, :matricula, :_destroy],
+      asesores_attributes: [:id, :nombre, :_destroy]
+    )
+  end
 end

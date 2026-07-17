@@ -1,0 +1,130 @@
+<div class="contenedor">
+  <h1 class="titulo">Administración de Zonas y Planteles</h1>
+
+  <div class="acciones-superiores">
+    <%= link_to "Volver", administrativo_path, class: "btn" %>
+  </div>
+
+  <div class="seccion">
+    <h2>Agregar zona</h2>
+
+    <div class="contenido-seccion">
+      <%= form_with model: @zona, local: true do |f| %>
+
+        <div class="campo">
+          <%= f.label :nombre, "Nombre de la zona" %>
+          <%= f.text_field :nombre, class: "input", placeholder: "Ej. Zona Rosa" %>
+        </div>
+
+        <%= f.submit "Agregar zona", class: "btn" %>
+
+      <% end %>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <h2>Zonas registradas</h2>
+
+    <% if @zonas.any? %>
+
+      <div class="lista-tesis">
+
+        <% @zonas.each do |zona| %>
+
+          <div class="tarjeta-tesis">
+
+            <div class="tarjeta-body">
+
+              <h2 class="titulo-zona">
+                <%= zona.nombre %>
+              </h2>
+
+              <h3 style="margin-bottom:20px;">
+                Planteles registrados
+              </h3>
+
+              <% if zona.plantels.any? %>
+
+                <% zona.plantels.order(:nombre).each do |plantel| %>
+
+                  <div class="plantel-card">
+
+                    <div class="plantel-info">
+
+                      <i class="bi bi-geo-alt-fill"></i>
+
+                      <span class="plantel-nombre">
+                        <%= plantel.nombre %>
+                      </span>
+
+                    </div>
+
+                    <%= button_to "Eliminar",
+                    plantel_path(plantel),
+                    method: :delete,
+                    class: "btn btn-danger",
+                    data: {
+                      turbo_confirm: "¿Eliminar este plantel?"
+                    } %>
+
+                  </div>
+
+                <% end %>
+
+              <% else %>
+
+                <p>No hay planteles registrados.</p>
+
+              <% end %>
+
+              <hr style="margin:25px 0;">
+
+              <h3>Agregar plantel</h3>
+
+              <%= form_with model: Plantel.new, url: plantels_path, local: true do |f| %>
+
+                <%= f.hidden_field :zona_id, value: zona.id %>
+
+                <div class="campo">
+                  <%= f.label :nombre, "Nombre del plantel" %>
+                  <%= f.text_field :nombre, class: "input", placeholder: "Ej. Londres" %>
+                </div>
+
+                <%= f.submit "Agregar plantel", class: "btn" %>
+
+              <% end %>
+
+            </div>
+
+            <div class="tarjeta-footer">
+
+              <%= button_to "Eliminar zona",
+              zona_path(zona),
+              method: :delete,
+              class: "btn btn-danger",
+              data: {
+                turbo_confirm: "¿Eliminar esta zona?"
+              } %>
+
+            </div>
+
+          </div>
+
+        <% end %>
+
+      </div>
+          <% else %>
+
+      <div class="sin-registros">
+
+        <h3>No hay zonas registradas.</h3>
+
+        <p>Agregue una zona para comenzar a registrar planteles.</p>
+
+      </div>
+
+    <% end %>
+
+  </div>
+
+</div>

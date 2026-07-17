@@ -1,18 +1,38 @@
 <div class="contenedor">
-
   <div class="cabecera-tesis">
-
     <h1 class="titulo">
       Buscar tesis
     </h1>
 
     <div class="contenido-seccion">
-
-      <%= form_with url: buscar_nombres_path, method: :get do %>
+      <%= form_with url: buscar_nombres_path,
+      method: :get,
+      local: true,
+      id: "formBusqueda" do %>
 
         <div class="campo">
+          <label>
+            Buscar por
+          </label>
 
-          <%= label_tag :numero_control, "Número de control" %>
+          <%= select_tag :tipo,
+          options_for_select(
+          [
+            ["Número de control", "numero"],
+            ["Integrante", "integrante"],
+            ["Asesor", "asesor"]
+          ],
+          params[:tipo] || "numero"
+          ),
+          id: "tipoBusqueda" %>
+        </div>
+
+        <div
+        class="campo"
+        id="campoNumero">
+
+          <%= label_tag :numero_control,
+          "Número de control" %>
 
           <%= text_field_tag :numero_control,
           params[:numero_control],
@@ -20,24 +40,56 @@
 
         </div>
 
-        <%= submit_tag "Buscar", class: "btn" %>
+        <div
+        class="campo"
+        id="campoNombre"
+        style="display:none;">
+
+          <label id="labelNombre">
+            Nombre
+          </label>
+
+          <input
+          type="text"
+          id="nombreBusqueda"
+          name="nombre"
+          value="<%= params[:nombre] %>"
+          autocomplete="off"
+          placeholder="Escriba un nombre...">
+
+          <div
+          id="listaCoincidencias"
+          style="
+          border:1px solid #ccc;
+          border-top:none;
+          background:white;
+          max-height:200px;
+          overflow-y:auto;
+          display:none;
+          position:relative;
+          z-index:1000;
+          ">
+          </div>
+
+        </div>
+
+        <%= submit_tag "Buscar",
+        class: "btn" %>
 
       <% end %>
-
     </div>
-
   </div>
 
-  <% if @nombre %>
+    <% if @nombre %>
 
     <div class="seccion">
-
       <h2>Resultado de la búsqueda</h2>
 
       <div class="contenido-seccion">
 
         <p>
           <strong>Número de control:</strong>
+
           <span class="dato-resaltado">
             <%= @nombre.numero_control %>
           </span>
@@ -45,46 +97,89 @@
 
         <p>
           <strong>Título:</strong>
+
           <span class="dato-resaltado">
             <%= @nombre.titulo %>
           </span>
         </p>
 
         <% if @nombre.carrera.present? %>
-
           <p>
             <strong>Carrera:</strong>
+
             <span class="dato-resaltado">
               <%= @nombre.carrera %>
             </span>
           </p>
-
         <% end %>
 
         <div style="margin-top:25px;">
-
           <%= link_to "Ver detalles de la tesis",
           @nombre,
           class: "btn" %>
-
         </div>
 
       </div>
+    </div>
+
+  <% elsif @nombres.present? %>
+
+    <div class="seccion">
+      <h2>Resultados encontrados</h2>
+
+      <% @nombres.each do |tesis| %>
+
+        <div class="contenido-seccion" style="margin-bottom:20px;">
+
+          <p>
+            <strong>Número de control:</strong>
+
+            <span class="dato-resaltado">
+              <%= tesis.numero_control %>
+            </span>
+          </p>
+
+          <p>
+            <strong>Título:</strong>
+
+            <span class="dato-resaltado">
+              <%= tesis.titulo %>
+            </span>
+          </p>
+
+          <% if tesis.carrera.present? %>
+
+            <p>
+              <strong>Carrera:</strong>
+
+              <span class="dato-resaltado">
+                <%= tesis.carrera %>
+              </span>
+            </p>
+
+          <% end %>
+
+          <div style="margin-top:25px;">
+            <%= link_to "Ver detalles de la tesis",
+            tesis,
+            class: "btn" %>
+          </div>
+
+        </div>
+
+      <% end %>
 
     </div>
 
-  <% elsif params[:numero_control].present? %>
+  <% elsif params[:numero_control].present? || params[:nombre].present? %>
 
     <div class="seccion">
-
       <h2>Resultado de la búsqueda</h2>
 
       <div class="contenido-seccion">
-
         <p>
-          No se encontró ninguna tesis con ese número de control.
+          No se encontró ninguna tesis con los datos proporcionados.
         </p>
-
       </div>
 
     </div>
@@ -92,3 +187,181 @@
   <% end %>
 
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const tipo = document.getElementById("tipoBusqueda");
+  const campoNumero = document.getElementById("campoNumero");
+  const campoNombre = document.getElementById("campoNombre");
+  const labelNombre = document.getElementById("labelNombre");
+
+  const nombre = document.getElementById("nombreBusqueda");
+  const lista = document.getElementById("listaCoincidencias");
+  const formulario = document.getElementById("formBusqueda");
+
+  const numero = document.querySelector(
+    "input[name='numero_control']"
+  );
+
+  function actualizarFormulario() {
+
+    lista.innerHTML = "";
+    lista.style.display = "none";
+
+    if (tipo.value === "numero") {
+
+      campoNumero.style.display = "block";
+      campoNombre.style.display = "none";
+
+      if (nombre) {
+        nombre.value = "";
+      }
+
+    } else {
+
+      campoNumero.style.display = "none";
+      campoNombre.style.display = "block";
+
+      if (numero) {
+        numero.value = "";
+      }
+
+      if (tipo.value === "integrante") {
+        labelNombre.textContent = "Integrante";
+      } else {
+        labelNombre.textContent = "Asesor";
+      }
+
+    }
+
+  }
+
+  tipo.addEventListener("change", actualizarFormulario);
+
+  actualizarFormulario();
+
+  function cargarSugerencias(texto = "") {
+
+  fetch(
+    "/bases/sugerencias?tipo=" +
+    encodeURIComponent(tipo.value) +
+    "&q=" +
+    encodeURIComponent(texto)
+  )
+
+  .then(response => response.json())
+
+  .then(function (datos) {
+
+    lista.innerHTML = "";
+
+    if (datos.length === 0) {
+      lista.style.display = "none";
+      return;
+    }
+
+    lista.style.display = "block";
+
+    datos.forEach(function (persona) {
+
+      const opcion = document.createElement("div");
+
+      opcion.textContent = persona;
+
+      opcion.style.padding = "8px";
+      opcion.style.cursor = "pointer";
+      opcion.style.borderBottom = "1px solid #ddd";
+
+      opcion.addEventListener("click", function () {
+
+        nombre.value = persona;
+
+        lista.innerHTML = "";
+        lista.style.display = "none";
+
+        formulario.submit();
+
+      });
+
+      lista.appendChild(opcion);
+
+    });
+
+  });
+
+}
+
+  nombre.addEventListener("input", function () {
+
+    if (tipo.value === "numero") {
+      return;
+    }
+
+    fetch(
+      "/bases/sugerencias?tipo=" +
+      encodeURIComponent(tipo.value) +
+      "&q=" +
+      encodeURIComponent(nombre.value)
+    )
+
+    .then(response => response.json())
+
+    .then(function (datos) {
+
+      lista.innerHTML = "";
+
+      if (datos.length === 0) {
+
+        lista.style.display = "none";
+        return;
+
+      }
+
+      lista.style.display = "block";
+
+      datos.forEach(function (persona) {
+
+        const opcion = document.createElement("div");
+
+        opcion.textContent = persona;
+
+        opcion.style.padding = "8px";
+        opcion.style.cursor = "pointer";
+        opcion.style.borderBottom = "1px solid #ddd";
+
+        opcion.addEventListener("click", function () {
+
+          nombre.value = persona;
+
+          lista.innerHTML = "";
+          lista.style.display = "none";
+
+          formulario.submit();
+
+        });
+
+        lista.appendChild(opcion);
+
+      });
+
+    });
+
+  });
+
+  document.addEventListener("click", function (e) {
+
+    if (
+      !lista.contains(e.target) &&
+      e.target !== nombre
+    ) {
+
+      lista.innerHTML = "";
+      lista.style.display = "none";
+
+    }
+
+  });
+
+});
+</script>

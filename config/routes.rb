@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "administrativo", to: "administrativo#index"
   get "home/index"
 
   get "login", to: "sesiones#login"
@@ -6,6 +7,9 @@ Rails.application.routes.draw do
   get "logout", to: "sesiones#logout"
 
   get "historial", to: "historial#index"
+
+  resources :zonas, only: [:index, :create, :update, :destroy]
+  resources :plantels, only: [:create, :destroy]
 
   resources :nombres, path: "bases" do
     member do
@@ -20,6 +24,7 @@ Rails.application.routes.draw do
     collection do
       get :buscar
       get :revisar
+      get :sugerencias
     end
   end
 

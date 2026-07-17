@@ -1,0 +1,99 @@
+<div class="contenedor">
+
+  <div class="cabecera-tesis">
+
+    <h1 class="titulo">
+      Panel Administrativo
+    </h1>
+
+  </div>
+
+  <div class="lista-tesis">
+
+    <div class="tarjeta-tesis">
+
+      <div class="tarjeta-header">
+
+        <h2>
+          Gestión de tesis
+        </h2>
+
+      </div>
+
+      <div class="tarjeta-body">
+
+        <p>
+          Acceda al listado completo de tesis registradas.
+        </p>
+
+      </div>
+
+      <div class="tarjeta-footer">
+
+        <%= link_to "Ver tesis",
+        nombres_path,
+        class: "btn" %>
+
+      </div>
+
+    </div>
+
+    <div class="tarjeta-tesis">
+
+      <div class="tarjeta-header">
+
+        <h2>
+          Buscar tesis
+        </h2>
+
+      </div>
+
+      <div class="tarjeta-body">
+
+        <p>
+          Busque una tesis por número de control, integrante o asesor.
+        </p>
+
+      </div>
+
+      <div class="tarjeta-footer">
+
+        <%= link_to "Buscar",
+        buscar_nombres_path,
+        class: "btn" %>
+
+      </div>
+
+    </div>
+
+    <div class="tarjeta-tesis">
+
+      <div class="tarjeta-header">
+
+        <h2>
+          Historial
+        </h2>
+
+      </div>
+
+      <div class="tarjeta-body">
+
+        <p>
+          Consulte el historial de acciones realizadas en el sistema.
+        </p>
+
+      </div>
+
+      <div class="tarjeta-footer">
+
+        <%= link_to "Ver historial",
+        historial_path,
+        class: "btn" %>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
