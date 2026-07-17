@@ -1,0 +1,58 @@
+<div class="estadisticas">
+  <div class="encabezado">
+    <h2>
+      <i class="bi bi-bar-chart-fill"></i>
+      Estadísticas de tesis
+    </h2>
+
+    <p>
+      Consulta la distribución de tesis por zona, carrera y plantel.
+    </p>
+  </div>
+
+  <div class="panel-superior">
+    <div class="selector">
+      <label>Zona</label>
+      <%= form_with url: estadisticas_path, method: :get, local: true do %>
+        <%= select_tag :zona_id,
+            options_from_collection_for_select(
+              @zonas,
+              :id,
+              :nombre,
+              @zona_seleccionada
+            ),
+            include_blank: "Selecciona una zona",
+            onchange: "this.form.submit()" %>
+      <% end %>
+    </div>
+
+    <div class="resumen">
+      <div class="dato">
+        <span class="titulo">Total de tesis</span>
+        <span class="numero"><%= @total_tesis %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grafica-card">
+    <h3>Distribución por carrera</h3>
+    <% if @grafica.present? %>
+      <canvas
+        id="graficaCarreras"
+        data-datos='<%= raw @grafica.to_json %>'>
+      </canvas>
+
+    <% else %>
+      <div class="mensaje">
+        Selecciona una zona para visualizar la gráfica.
+      </div>
+    <% end %>
+  </div>
+
+  <div class="planteles">
+    <h3>Desglose por plantel</h3>
+    <div class="mensaje">
+      Próximamente aparecerán las estadísticas por plantel.
+    </div>
+  </div>
+</div>

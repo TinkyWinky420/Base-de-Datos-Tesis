@@ -20,7 +20,8 @@
           [
             ["Número de control", "numero"],
             ["Integrante", "integrante"],
-            ["Asesor", "asesor"]
+            ["Asesor", "asesor"],
+            ["Matrícula", "matricula"],
           ],
           params[:tipo] || "numero"
           ),
@@ -30,21 +31,17 @@
         <div
         class="campo"
         id="campoNumero">
-
           <%= label_tag :numero_control,
           "Número de control" %>
-
           <%= text_field_tag :numero_control,
           params[:numero_control],
           placeholder: "Ej. 0001" %>
-
         </div>
 
         <div
         class="campo"
         id="campoNombre"
         style="display:none;">
-
           <label id="labelNombre">
             Nombre
           </label>
@@ -70,26 +67,32 @@
           z-index:1000;
           ">
           </div>
-
         </div>
+
+        <div
+        class="campo"
+        id="campoMatricula"
+        style="display:none;">
+
+        <%= label_tag :matricula,
+        "Matrícula" %>
+        <%= text_field_tag :matricula,
+        params[:matricula],
+        placeholder: "Ingrese la matrícula" %>
+     </div>
 
         <%= submit_tag "Buscar",
         class: "btn" %>
-
       <% end %>
     </div>
   </div>
 
     <% if @nombre %>
-
     <div class="seccion">
       <h2>Resultado de la búsqueda</h2>
-
       <div class="contenido-seccion">
-
         <p>
           <strong>Número de control:</strong>
-
           <span class="dato-resaltado">
             <%= @nombre.numero_control %>
           </span>
@@ -97,7 +100,6 @@
 
         <p>
           <strong>Título:</strong>
-
           <span class="dato-resaltado">
             <%= @nombre.titulo %>
           </span>
@@ -106,7 +108,6 @@
         <% if @nombre.carrera.present? %>
           <p>
             <strong>Carrera:</strong>
-
             <span class="dato-resaltado">
               <%= @nombre.carrera %>
             </span>
@@ -118,22 +119,16 @@
           @nombre,
           class: "btn" %>
         </div>
-
       </div>
     </div>
 
   <% elsif @nombres.present? %>
-
     <div class="seccion">
       <h2>Resultados encontrados</h2>
-
       <% @nombres.each do |tesis| %>
-
         <div class="contenido-seccion" style="margin-bottom:20px;">
-
           <p>
             <strong>Número de control:</strong>
-
             <span class="dato-resaltado">
               <%= tesis.numero_control %>
             </span>
@@ -141,22 +136,18 @@
 
           <p>
             <strong>Título:</strong>
-
             <span class="dato-resaltado">
               <%= tesis.titulo %>
             </span>
           </p>
 
           <% if tesis.carrera.present? %>
-
             <p>
               <strong>Carrera:</strong>
-
               <span class="dato-resaltado">
                 <%= tesis.carrera %>
               </span>
             </p>
-
           <% end %>
 
           <div style="margin-top:25px;">
@@ -164,85 +155,87 @@
             tesis,
             class: "btn" %>
           </div>
-
         </div>
-
       <% end %>
-
     </div>
 
-  <% elsif params[:numero_control].present? || params[:nombre].present? %>
-
+  <% elsif params[:numero_control].present? ||
+        params[:nombre].present? ||
+        params[:matricula].present? %>
     <div class="seccion">
       <h2>Resultado de la búsqueda</h2>
-
       <div class="contenido-seccion">
         <p>
           No se encontró ninguna tesis con los datos proporcionados.
         </p>
       </div>
-
     </div>
-
   <% end %>
-
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-
   const tipo = document.getElementById("tipoBusqueda");
   const campoNumero = document.getElementById("campoNumero");
   const campoNombre = document.getElementById("campoNombre");
+  const campoMatricula = document.getElementById("campoMatricula");
   const labelNombre = document.getElementById("labelNombre");
-
   const nombre = document.getElementById("nombreBusqueda");
   const lista = document.getElementById("listaCoincidencias");
   const formulario = document.getElementById("formBusqueda");
-
   const numero = document.querySelector(
     "input[name='numero_control']"
   );
 
-  function actualizarFormulario() {
+  const matricula = document.querySelector(
+  "input[name='matricula']"
+  );
 
-    lista.innerHTML = "";
-    lista.style.display = "none";
+ function actualizarFormulario() {
+  lista.innerHTML = "";
+  lista.style.display = "none";
+  campoNumero.style.display = "none";
+  campoNombre.style.display = "none";
+  campoMatricula.style.display = "none";
 
-    if (tipo.value === "numero") {
-
-      campoNumero.style.display = "block";
-      campoNombre.style.display = "none";
-
-      if (nombre) {
-        nombre.value = "";
-      }
-
-    } else {
-
-      campoNumero.style.display = "none";
-      campoNombre.style.display = "block";
-
-      if (numero) {
-        numero.value = "";
-      }
-
-      if (tipo.value === "integrante") {
-        labelNombre.textContent = "Integrante";
-      } else {
-        labelNombre.textContent = "Asesor";
-      }
-
+  if (tipo.value === "numero") {
+    campoNumero.style.display = "block";
+    if (nombre) {
+      nombre.value = "";
     }
-
+    if (matricula) {
+      matricula.value = "";
+    }
   }
+  else if (tipo.value === "matricula") {
+    campoMatricula.style.display = "block";
+    if (nombre) {
+      nombre.value = "";
+    }
+    if (numero) {
+      numero.value = "";
+    }
+  }
+  else {
+    campoNombre.style.display = "block";
+    if (numero) {
+      numero.value = "";
+    }
+    if (matricula) {
+      matricula.value = "";
+    }
+    if (tipo.value === "integrante") {
+      labelNombre.textContent = "Integrante";
+    }
+    else {
+      labelNombre.textContent = "Asesor";
+    }
+  }
+}
 
   tipo.addEventListener("change", actualizarFormulario);
-
   actualizarFormulario();
-
   function cargarSugerencias(texto = "") {
-
   fetch(
     "/bases/sugerencias?tipo=" +
     encodeURIComponent(tipo.value) +
@@ -251,117 +244,75 @@ document.addEventListener("DOMContentLoaded", function () {
   )
 
   .then(response => response.json())
-
   .then(function (datos) {
-
     lista.innerHTML = "";
-
     if (datos.length === 0) {
       lista.style.display = "none";
       return;
     }
-
     lista.style.display = "block";
-
     datos.forEach(function (persona) {
-
       const opcion = document.createElement("div");
-
       opcion.textContent = persona;
-
       opcion.style.padding = "8px";
       opcion.style.cursor = "pointer";
       opcion.style.borderBottom = "1px solid #ddd";
-
       opcion.addEventListener("click", function () {
-
         nombre.value = persona;
-
         lista.innerHTML = "";
         lista.style.display = "none";
-
         formulario.submit();
-
       });
-
       lista.appendChild(opcion);
-
     });
-
   });
-
 }
 
   nombre.addEventListener("input", function () {
-
-    if (tipo.value === "numero") {
-      return;
-    }
-
+    if (
+    tipo.value === "numero" ||
+    tipo.value === "matricula"
+    ) {
+    return;
+}
     fetch(
       "/bases/sugerencias?tipo=" +
       encodeURIComponent(tipo.value) +
       "&q=" +
       encodeURIComponent(nombre.value)
     )
-
     .then(response => response.json())
-
     .then(function (datos) {
-
       lista.innerHTML = "";
-
       if (datos.length === 0) {
-
         lista.style.display = "none";
         return;
-
       }
-
       lista.style.display = "block";
-
       datos.forEach(function (persona) {
-
         const opcion = document.createElement("div");
-
         opcion.textContent = persona;
-
         opcion.style.padding = "8px";
         opcion.style.cursor = "pointer";
         opcion.style.borderBottom = "1px solid #ddd";
-
         opcion.addEventListener("click", function () {
-
           nombre.value = persona;
-
           lista.innerHTML = "";
           lista.style.display = "none";
-
           formulario.submit();
-
         });
-
         lista.appendChild(opcion);
-
       });
-
     });
-
   });
-
   document.addEventListener("click", function (e) {
-
     if (
       !lista.contains(e.target) &&
       e.target !== nombre
     ) {
-
       lista.innerHTML = "";
       lista.style.display = "none";
-
     }
-
   });
-
 });
 </script>

@@ -134,6 +134,7 @@ def buscar
   @nombre = nil
   @nombres = []
   case params[:tipo]
+
   when "numero"
     if params[:numero_control].present?
       numero = params[:numero_control].to_i
@@ -142,6 +143,7 @@ def buscar
         numero_control: numero_formateado
       )
     end
+
   when "integrante"
     if params[:nombre].present?
       @nombres = Nombre
@@ -153,6 +155,7 @@ def buscar
                     )
                     .distinct
     end
+
   when "asesor"
     if params[:nombre].present?
       @nombres = Nombre
@@ -160,6 +163,18 @@ def buscar
                     .where(
                       asesores: {
                         nombre: params[:nombre]
+                      }
+                    )
+                    .distinct
+    end
+
+  when "matricula"
+    if params[:matricula].present?
+      @nombres = Nombre
+                    .joins(:integrantes)
+                    .where(
+                      integrantes: {
+                        matricula: params[:matricula]
                       }
                     )
                     .distinct
