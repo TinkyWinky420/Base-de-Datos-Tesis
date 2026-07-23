@@ -24,6 +24,7 @@
             include_blank: "Selecciona una zona",
             onchange: "this.form.submit()" %>
       <% end %>
+
     </div>
 
     <div class="resumen">
@@ -32,6 +33,7 @@
         <span class="numero"><%= @total_tesis %></span>
       </div>
     </div>
+
   </div>
 
   <div class="grafica-card">
@@ -47,12 +49,37 @@
         Selecciona una zona para visualizar la gráfica.
       </div>
     <% end %>
+
   </div>
 
-  <div class="planteles">
-    <h3>Desglose por plantel</h3>
-    <div class="mensaje">
-      Próximamente aparecerán las estadísticas por plantel.
+<div class="planteles">
+  <h3>Desglose por plantel</h3>
+  <% if @planteles.present? %>
+    <div class="lista-planteles">
+      <% @planteles.each do |plantel, cantidad| %>
+        <div class="card-plantel">
+          <div class="info-plantel">
+            <i class="bi bi-building"></i>
+            <div>
+              <span class="nombre-plantel"><%= plantel %></span>
+              <small>Plantel</small>
+            </div>
+          </div>
+
+          <div class="cantidad-plantel">
+            <%= cantidad %>
+            <small>tesis</small>
+          </div>
+        </div>
+      <% end %>
+
     </div>
-  </div>
+
+  <% else %>
+    <div class="mensaje">
+      Selecciona una zona para visualizar el desglose por plantel.
+    </div>
+  <% end %>
+
+</div>
 </div>

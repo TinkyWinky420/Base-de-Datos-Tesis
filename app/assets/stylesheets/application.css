@@ -1361,3 +1361,75 @@ margin-bottom:25px;
     color:#64748b;
     box-shadow:var(--sombra);
 }
+
+.lista-planteles{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+    margin-top:20px;
+}
+
+.card-plantel{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-left:6px solid #2563eb;
+    border-radius:14px;
+    padding:18px 22px;
+    transition:.25s;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.card-plantel:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 24px rgba(37,99,235,.18);
+}
+
+.info-plantel{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+
+.info-plantel i{
+    font-size:30px;
+    color:#2563eb;
+}
+
+.nombre-plantel{
+    display:block;
+    font-size:18px;
+    font-weight:600;
+    color:#1f2937;
+}
+
+.info-plantel small{
+    color:#6b7280;
+    font-size:13px;
+}
+
+.cantidad-plantel{
+    text-align:center;
+    font-size:34px;
+    font-weight:700;
+    color:#2563eb;
+    min-width:90px;
+}
+
+.cantidad-plantel small{
+    display:block;
+    font-size:13px;
+    color:#6b7280;
+    font-weight:500;
+}
+
+.grafica-card{
+    height: 500px;
+}
+
+#graficaCarreras{
+    width: 100% !important;
+    height: 400px !important;
+}
