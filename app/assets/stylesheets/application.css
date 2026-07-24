@@ -1433,3 +1433,38 @@ margin-bottom:25px;
     width: 100% !important;
     height: 400px !important;
 }
+
+.btn-guardar{
+    background:#198754;
+    color:white;
+    border:none;
+    padding:12px 25px;
+    border-radius:8px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.btn-guardar:hover{
+    background:#157347;
+    transform:translateY(-2px);
+}
+
+.btn-guardar:active{
+    transform:scale(.98);
+}
+
+.mensaje{
+    margin-top:15px;
+    font-weight:bold;
+    display:none;
+}
+
+.mensaje.exito{
+    color:#198754;
+}
+
+.mensaje.error{
+    color:#dc3545;
+}

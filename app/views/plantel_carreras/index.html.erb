@@ -1,0 +1,238 @@
+<div class="contenedor">
+
+  <h1>Carreras por plantel</h1>
+
+  <hr>
+
+  <div class="form-group">
+    <label>Zona</label>
+
+    <select id="zona_select">
+      <option value="">Seleccione una zona</option>
+
+      <% @zonas.each do |zona| %>
+        <option value="<%= zona.id %>">
+          <%= zona.nombre %>
+        </option>
+      <% end %>
+
+    </select>
+  </div>
+
+  <br>
+
+  <div class="form-group">
+    <label>Plantel</label>
+
+    <select id="plantel_select" disabled>
+      <option value="">Seleccione un plantel</option>
+    </select>
+  </div>
+
+  <br>
+
+  <div id="carreras" style="display:none;">
+
+    <h3>Carreras</h3>
+
+    <div id="lista_carreras">
+
+    </div>
+
+    <br>
+
+    <button id="guardar" class="btn-guardar">
+      Guardar cambios
+    </button>
+
+    <p id="mensaje" class="mensaje"></p>
+
+  </div>
+
+</div>
+
+<style>
+
+.btn-guardar{
+  background:#198754;
+  color:white;
+  border:none;
+  padding:12px 28px;
+  border-radius:8px;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.btn-guardar:hover{
+  background:#157347;
+  transform:translateY(-2px);
+}
+
+.btn-guardar:active{
+  transform:scale(.98);
+}
+
+.mensaje{
+  display:none;
+  margin-top:15px;
+  font-weight:bold;
+  font-size:15px;
+}
+
+.exito{
+  color:#198754;
+}
+
+.error{
+  color:#dc3545;
+}
+
+</style>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  const zona = document.getElementById("zona_select");
+  const plantel = document.getElementById("plantel_select");
+  const carreras = document.getElementById("carreras");
+  const lista = document.getElementById("lista_carreras");
+  const guardar = document.getElementById("guardar");
+  const mensaje = document.getElementById("mensaje");
+
+  zona.addEventListener("change", function () {
+
+    plantel.innerHTML = '<option value="">Seleccione un plantel</option>';
+
+    plantel.disabled = true;
+
+    carreras.style.display = "none";
+
+    lista.innerHTML = "";
+
+    mensaje.style.display = "none";
+
+    if (this.value == "") {
+      return;
+    }
+
+    fetch("/zonas/" + this.value + "/planteles")
+      .then(response => response.json())
+      .then(data => {
+
+        data.forEach(function(item){
+
+          const opcion = document.createElement("option");
+
+          opcion.value = item.id;
+          opcion.textContent = item.nombre;
+
+          plantel.appendChild(opcion);
+
+        });
+
+        plantel.disabled = false;
+
+      });
+
+  });
+
+  plantel.addEventListener("change", function(){
+
+    lista.innerHTML = "";
+
+    carreras.style.display = "none";
+
+    mensaje.style.display = "none";
+
+    if(this.value==""){
+      return;
+    }
+
+    fetch("/plantel_carreras/" + this.value + "/carreras")
+      .then(response => response.json())
+      .then(data => {
+
+        data.carreras.forEach(function(carrera){
+
+          const label = document.createElement("label");
+
+          const check = document.createElement("input");
+
+          check.type = "checkbox";
+          check.value = carrera.id;
+          check.checked = carrera.seleccionada;
+
+          label.appendChild(check);
+
+          label.append(" " + carrera.nombre);
+
+          lista.appendChild(label);
+
+          lista.appendChild(document.createElement("br"));
+
+        });
+
+        carreras.style.display = "block";
+
+      });
+
+  });
+
+  guardar.addEventListener("click", function(){
+
+    const seleccionadas = [];
+
+    document.querySelectorAll("#lista_carreras input[type=checkbox]").forEach(function(check){
+
+      if(check.checked){
+        seleccionadas.push(check.value);
+      }
+
+    });
+
+    fetch("/plantel_carreras/" + plantel.value, {
+
+      method: "PATCH",
+
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+      },
+
+      body: JSON.stringify({
+        carrera_ids: seleccionadas
+      })
+
+    })
+    .then(response => {
+
+      mensaje.style.display = "block";
+
+      if(response.ok){
+
+        mensaje.className = "mensaje exito";
+        mensaje.textContent = "✔ Cambios guardados correctamente.";
+
+      }else{
+
+        mensaje.className = "mensaje error";
+        mensaje.textContent = "✖ Ocurrió un error al guardar.";
+
+      }
+
+      setTimeout(function(){
+
+        mensaje.style.display = "none";
+
+      },3000);
+
+    });
+
+  });
+
+});
+
+</script>

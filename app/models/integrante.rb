@@ -9,8 +9,8 @@ class Integrante < ApplicationRecord
 
   validates :matricula,
     format: {
-      with: /\A\d+\z/,
-      message: "No puede contener letras"
+      with: /\A\d{9}\z/,
+      message: "Debe contener exactamente 9 dígitos"
     },
     unless: -> { matricula.blank? }
 
@@ -20,7 +20,7 @@ class Integrante < ApplicationRecord
   validates :nombre,
     format: {
       with: /\A[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+\z/,
-      message: "Los nombres de los integrantes no pueden contener numeros"
+      message: "Los nombres de los integrantes no pueden contener números"
     },
     unless: -> { nombre.blank? }
 end

@@ -1,9 +1,5 @@
 class Nombre < ApplicationRecord
-  ZONAS = {
-  "Zona Rosa" => [
-    "Londres"
-  ]
-}.freeze
+
   has_many :integrantes, foreign_key: "tesis_id", dependent: :destroy
   has_many :asesores, class_name: "Asesor", foreign_key: "tesis_id", dependent: :destroy
 
@@ -35,15 +31,6 @@ class Nombre < ApplicationRecord
       documento.content_type == "application/pdf"
   end
 
-  def es_word?
-    return false unless documento.attached?
-
-    [
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    ].include?(documento.content_type)
-  end
-
   private
 
   def generar_numero_control
@@ -60,14 +47,8 @@ class Nombre < ApplicationRecord
   def validar_tipo_documento
     return unless documento.attached?
 
-    tipos_permitidos = [
-      "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    ]
-
-    unless tipos_permitidos.include?(documento.content_type)
-      errors.add(:documento, "No se puede subir documento, formato inválido")
+    unless documento.content_type == "application/pdf"
+      errors.add(:documento, "debe estar en formato PDF")
     end
   end
 
@@ -82,4 +63,5 @@ class Nombre < ApplicationRecord
       errors.add(:asesores, "Se requiere agregar Asesor")
     end
   end
+
 end

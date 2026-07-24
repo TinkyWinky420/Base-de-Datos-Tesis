@@ -41,14 +41,20 @@
 <label>
 Título <span class="obligatorio">* OBLIGATORIO</span>
 </label>
-<%= form.text_field :titulo, placeholder: "Ingrese el título de la tesis" %>
+
+<%= form.text_field :titulo,
+placeholder: "Ingrese el título de la tesis" %>
+
 </div>
 
 <div class="campo">
 <label>
 Descripción <span class="obligatorio">* OBLIGATORIO</span>
 </label>
-<%= form.textarea :descripcion, placeholder: "Describa brevemente la tesis" %>
+
+<%= form.textarea :descripcion,
+placeholder: "Describa brevemente la tesis" %>
+
 </div>
 
 </div>
@@ -65,6 +71,7 @@ Descripción <span class="obligatorio">* OBLIGATORIO</span>
 <div class="asesor">
 
 <div class="campo">
+
 <label>
 Carrera <span class="obligatorio">* OBLIGATORIO</span>
 </label>
@@ -76,20 +83,24 @@ Carrera <span class="obligatorio">* OBLIGATORIO</span>
 </div>
 
 <div class="campo">
+
 <label>
 Zona <span class="obligatorio">* OBLIGATORIO</span>
 </label>
 
-<%= form.select :zona,
-@zonas.keys,
+<%= form.collection_select :zona,
+@zonas,
+:nombre,
+:nombre,
 { prompt: "Elija su zona" },
-id: "zona_select" %>
+{ id: "zona_select" } %>
 
 </div>
 
 <div id="plantel_container" style="display:none;">
 
 <div class="campo">
+
 <label>
 Plantel <span class="obligatorio">* OBLIGATORIO</span>
 </label>
@@ -97,7 +108,7 @@ Plantel <span class="obligatorio">* OBLIGATORIO</span>
 <%= form.select :plantel,
 [],
 { prompt: "Elija un plantel" },
-id: "plantel_select" %>
+{ id: "plantel_select" } %>
 
 </div>
 
@@ -128,22 +139,23 @@ Nombre <span class="obligatorio">* OBLIGATORIO</span>
 <%= i.text_field :nombre,
 pattern: "[A-Za-záéíóúÁÉÍÓÚñÑ ]+",
 placeholder: "Nombre completo",
-oninvalid: "this.setCustomValidity('El nombre no puede contener numeros')",
+oninvalid: "this.setCustomValidity('El nombre no puede contener números')",
 oninput: "this.setCustomValidity('')" %>
 
 </div>
 
 <div class="campo">
 <label>
-Matrícula <span class="obligatorio">* OBLIGATORIO</span>
+Matrícula (9 dígitos) <span class="obligatorio">* OBLIGATORIO</span>
 </label>
 
 <%= i.text_field :matricula,
 class: "sin-flechas",
 inputmode: "numeric",
+maxlength: 9,
 placeholder: "Número de matrícula",
-pattern: "[0-9]+",
-oninvalid: "this.setCustomValidity('La matrícula solo puede contener números')",
+pattern: "[0-9]{9}",
+oninvalid: "this.setCustomValidity('La matrícula debe contener exactamente 9 dígitos')",
 oninput: "this.setCustomValidity('')" %>
 
 </div>
@@ -163,9 +175,11 @@ class: "btn btn-danger" %>
 </div>
 
 <div class="acciones-formulario">
+
 <button type="button" class="btn" onclick="agregarIntegrante()">
 Agregar integrante
 </button>
+
 </div>
 
 </div>
@@ -192,7 +206,7 @@ Nombre <span class="obligatorio">* OBLIGATORIO</span>
 <%= a.text_field :nombre,
 pattern: "[A-Za-záéíóúÁÉÍÓÚñÑ ]+",
 placeholder: "Nombre del asesor",
-oninvalid: "this.setCustomValidity('El nombre no puede contener numeros')",
+oninvalid: "this.setCustomValidity('El nombre no puede contener números')",
 oninput: "this.setCustomValidity('')" %>
 
 </div>
@@ -229,8 +243,12 @@ Subir documento <span class="obligatorio">* OBLIGATORIO</span>
 </label>
 
 <%= form.file_field :documento,
-accept: ".pdf,.doc,.docx",
+accept: ".pdf",
 onchange: "validarArchivo(this)" %>
+
+<p style="margin-top:8px; color:#666; font-size:14px;">
+El documento debe cargarse únicamente en formato PDF.
+</p>
 
 </div>
 
@@ -247,117 +265,135 @@ onchange: "validarArchivo(this)" %>
 <% end %>
 
 <script>
+
 function validarArchivo(input){
+
 const archivo=input.files[0];
+
 if(!archivo)return;
 
-const tiposPermitidos=[
-"application/pdf",
-"application/msword",
-"application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-];
-
-if(!tiposPermitidos.includes(archivo.type)){
-alert("No se puede subir documento, formato inválido");
+if(archivo.type!=="application/pdf"){
+alert("Solo se permiten archivos PDF.");
 input.value="";
 }
+
 }
 
 function agregarIntegrante(){
+
 const container=document.getElementById("integrantes");
 const index=container.querySelectorAll(".integrante").length;
 
 const html=`
 <div class="integrante">
+
 <div class="campo">
+
 <label>
 Nombre <span class="obligatorio">* OBLIGATORIO</span>
 </label>
+
 <input
 type="text"
 name="nombre[integrantes_attributes][${index}][nombre]"
 placeholder="Nombre completo"
 pattern="[A-Za-záéíóúÁÉÍÓÚñÑ ]+"
-oninvalid="this.setCustomValidity('El nombre no puede contener numeros')"
+oninvalid="this.setCustomValidity('El nombre no puede contener números')"
 oninput="this.setCustomValidity('')">
+
 </div>
 
 <div class="campo">
+
 <label>
-Matrícula <span class="obligatorio">* OBLIGATORIO</span>
+Matrícula (9 dígitos) <span class="obligatorio">* OBLIGATORIO</span>
 </label>
+
 <input
 type="text"
 name="nombre[integrantes_attributes][${index}][matricula]"
 placeholder="Número de matrícula"
+maxlength="9"
 inputmode="numeric"
-pattern="[0-9]+"
-oninvalid="this.setCustomValidity('La matrícula solo puede contener números')"
+pattern="[0-9]{9}"
+oninvalid="this.setCustomValidity('La matrícula debe contener exactamente 9 dígitos')"
 oninput="this.setCustomValidity('')">
+
 </div>
+
 </div>
 `;
 
 container.insertAdjacentHTML("beforeend",html);
+
 }
 
 function agregarAsesor(){
+
 const container=document.getElementById("asesores");
 const index=container.querySelectorAll(".asesor").length;
 
 const html=`
 <div class="asesor">
+
 <div class="campo">
+
 <label>
 Nombre <span class="obligatorio">* OBLIGATORIO</span>
 </label>
+
 <input
 type="text"
 name="nombre[asesores_attributes][${index}][nombre]"
 placeholder="Nombre del asesor"
 pattern="[A-Za-záéíóúÁÉÍÓÚñÑ ]+"
-oninvalid="this.setCustomValidity('El nombre no puede contener numeros')"
+oninvalid="this.setCustomValidity('El nombre no puede contener números')"
 oninput="this.setCustomValidity('')">
+
 </div>
+
 </div>
 `;
 
 container.insertAdjacentHTML("beforeend",html);
+
 }
 
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded",function(){
 
 const zona=document.getElementById("zona_select");
 const contenedor=document.getElementById("plantel_container");
 const plantel=document.getElementById("plantel_select");
 
-const zonas=<%= raw @zonas.to_json %>;
+const zonas=<%= raw(
+@zonas.each_with_object({}) do |z,h|
+h[z.nombre]=z.plantels.order(:nombre).pluck(:nombre)
+end.to_json
+) %>;
 
 function cargarPlanteles(){
 
-const zonaSeleccionada=zona.value;
-
 plantel.innerHTML="";
 
-if(zonaSeleccionada===""){
+if(zona.value===""){
 contenedor.style.display="none";
 return;
 }
 
 contenedor.style.display="block";
 
-const opcionInicial=document.createElement("option");
-opcionInicial.value="";
-opcionInicial.text="Elija un plantel";
-plantel.appendChild(opcionInicial);
-
-zonas[zonaSeleccionada].forEach(function(nombre){
-
 const opcion=document.createElement("option");
-opcion.value=nombre;
-opcion.text=nombre;
-
+opcion.value="";
+opcion.text="Elija un plantel";
 plantel.appendChild(opcion);
+
+(zonas[zona.value] || []).forEach(function(nombre){
+
+const item=document.createElement("option");
+item.value=nombre;
+item.text=nombre;
+
+plantel.appendChild(item);
 
 });
 
@@ -365,5 +401,10 @@ plantel.appendChild(opcion);
 
 zona.addEventListener("change",cargarPlanteles);
 
+if(zona.value!==""){
+cargarPlanteles();
+}
+
 });
+
 </script>

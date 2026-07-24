@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_16_154330) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_24_145553) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -46,6 +46,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_16_154330) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "carreras", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "nombre"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "historials", force: :cascade do |t|
     t.string "accion"
     t.datetime "created_at", null: false
@@ -72,6 +78,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_16_154330) do
     t.string "zona"
   end
 
+  create_table "plantel_carreras", force: :cascade do |t|
+    t.integer "carrera_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "plantel_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["carrera_id"], name: "index_plantel_carreras_on_carrera_id"
+    t.index ["plantel_id"], name: "index_plantel_carreras_on_plantel_id"
+  end
+
   create_table "plantels", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "nombre"
@@ -88,5 +103,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_16_154330) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "plantel_carreras", "carreras"
+  add_foreign_key "plantel_carreras", "plantels"
   add_foreign_key "plantels", "zonas"
 end

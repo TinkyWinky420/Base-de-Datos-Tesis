@@ -67,18 +67,14 @@
 
         <% unless controller_name == "sesiones" %>
 
+          <%= link_to new_nombre_path, class: "sidebar-btn" do %>
+            <span class="icono">
+              <i class="bi bi-file-earmark-plus"></i>
+            </span>
+            <span class="texto">Registrar tesis</span>
+          <% end %>
+
           <% if session[:rol] == "alumno" %>
-
-            <% unless session[:tiene_tesis] %>
-
-              <%= link_to new_nombre_path, class: "sidebar-btn" do %>
-                <span class="icono">
-                  <i class="bi bi-file-earmark-plus"></i>
-                </span>
-                <span class="texto">Registrar tesis</span>
-              <% end %>
-
-            <% end %>
 
             <%= link_to revisar_nombres_path, class: "sidebar-btn" do %>
               <span class="icono">
@@ -161,6 +157,13 @@
               <span class="texto">Zonas y Planteles</span>
             <% end %>
 
+            <%= link_to plantel_carreras_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-diagram-3"></i>
+              </span>
+              <span class="texto">Carreras por plantel</span>
+            <% end %>
+
           <% else %>
 
             <%= link_to nombres_path, class: "sidebar-btn" do %>
@@ -198,6 +201,13 @@
               <span class="texto">Zonas y Planteles</span>
             <% end %>
 
+            <%= link_to plantel_carreras_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-diagram-3"></i>
+              </span>
+              <span class="texto">Carreras por plantel</span>
+            <% end %>
+
           <% end %>
 
         <% end %>
@@ -214,10 +224,12 @@
       document.addEventListener("DOMContentLoaded", function () {
         const boton = document.getElementById("menu-toggle");
         const sidebar = document.getElementById("sidebar");
+
         boton.addEventListener("click", function () {
           sidebar.classList.toggle("expandido");
         });
       });
     </script>
+
   </body>
 </html>

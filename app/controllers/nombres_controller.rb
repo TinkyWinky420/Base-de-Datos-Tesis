@@ -63,7 +63,7 @@ class NombresController < ApplicationController
     @nombre = Nombre.new
     @nombre.integrantes.build
     @nombre.asesores.build
-    @zonas = Nombre::ZONAS
+    @zonas = Zona.order(:nombre)
   end
 
   def create
@@ -87,11 +87,11 @@ class NombresController < ApplicationController
       )
 
       redirect_to @nombre, notice: "Tesis creada correctamente."
-    else
-      @zonas = Nombre::ZONAS
-      puts @nombre.errors.full_messages
-      render :new, status: :unprocessable_entity
-    end
+     else
+       @zonas = Zona.order(:nombre)
+       puts @nombre.errors.full_messages
+       render :new, status: :unprocessable_entity
+     end
   end
 
   def revisar

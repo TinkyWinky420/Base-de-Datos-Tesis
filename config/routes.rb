@@ -8,7 +8,18 @@ Rails.application.routes.draw do
   get "estadisticas", to: "estadisticas#index"
 
   resources :zonas, only: [:index, :create, :update, :destroy]
+
+  get "zonas/:id/planteles", to: "zonas#planteles"
+
   resources :plantels, only: [:create, :destroy]
+
+  resources :plantel_carreras, only: [:index] do
+    member do
+      get :carreras
+      patch :update
+    end
+  end
+
   resources :nombres, path: "bases" do
     member do
       get :motivo

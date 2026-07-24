@@ -1,5 +1,7 @@
 class Plantel < ApplicationRecord
   belongs_to :zona
+  has_many :plantel_carreras, dependent: :destroy
+  has_many :carreras, through: :plantel_carreras
   validates :nombre,
             presence: true,
             uniqueness: {

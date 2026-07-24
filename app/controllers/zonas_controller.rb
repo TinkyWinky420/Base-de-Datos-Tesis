@@ -6,23 +6,23 @@ class ZonasController < ApplicationController
   end
 
   def create
-  @zona = Zona.new(zona_params)
+    @zona = Zona.new(zona_params)
 
-  if @zona.save
-    redirect_to zonas_path,
-                notice: "Zona agregada correctamente."
-  else
-    redirect_to zonas_path,
-                alert: "La zona ya existe."
+    if @zona.save
+      redirect_to zonas_path,
+                  notice: "Zona agregada correctamente."
+    else
+      redirect_to zonas_path,
+                  alert: "La zona ya existe."
+    end
   end
-end
 
   def update
     @zona = Zona.find(params[:id])
 
     if @zona.update(zona_params)
       redirect_to zonas_path,
-      notice: "Zona actualizada correctamente."
+                  notice: "Zona actualizada correctamente."
     else
       @zonas = Zona.order(:nombre)
       render :index, status: :unprocessable_entity
@@ -35,7 +35,13 @@ end
     @zona.destroy
 
     redirect_to zonas_path,
-    notice: "Zona eliminada correctamente."
+                notice: "Zona eliminada correctamente."
+  end
+
+  def planteles
+    zona = Zona.find(params[:id])
+
+    render json: zona.plantels.order(:nombre).select(:id, :nombre)
   end
 
   private
