@@ -40,8 +40,10 @@
 
       <% end %>
 
-      <%= form_with url: confirmar_eliminacion_nombre_path(@nombre), method: :post do %>
-
+      <%= form_with url: confirmar_eliminacion_nombre_path(@nombre),
+              method: :post,
+              local: true,
+              data: { turbo: false } do %>
         <%= hidden_field_tag :motivo, params[:motivo] %>
 
         <div class="campo">

@@ -359,52 +359,58 @@ container.insertAdjacentHTML("beforeend",html);
 
 }
 
-document.addEventListener("DOMContentLoaded",function(){
+document.addEventListener("turbo:load", iniciarFormulario);
 
-const zona=document.getElementById("zona_select");
-const contenedor=document.getElementById("plantel_container");
-const plantel=document.getElementById("plantel_select");
+function iniciarFormulario() {
 
-const zonas=<%= raw(
-@zonas.each_with_object({}) do |z,h|
-h[z.nombre]=z.plantels.order(:nombre).pluck(:nombre)
-end.to_json
-) %>;
+  const zona = document.getElementById("zona_select");
+  const contenedor = document.getElementById("plantel_container");
+  const plantel = document.getElementById("plantel_select");
 
-function cargarPlanteles(){
+  if (!zona || !contenedor || !plantel) {
+    return;
+  }
 
-plantel.innerHTML="";
+  zona.addEventListener("change", function () {
 
-if(zona.value===""){
-contenedor.style.display="none";
-return;
+    plantel.innerHTML = '<option value="">Elija un plantel</option>';
+
+    if (zona.value === "") {
+      contenedor.style.display = "none";
+      return;
+    }
+
+    fetch("/zonas/" + encodeURIComponent(zona.value) + "/planteles")
+      .then(response => response.json())
+      .then(data => {
+
+        contenedor.style.display = "block";
+
+        data.forEach(function(item){
+
+          const opcion = document.createElement("option");
+
+          opcion.value = item.nombre;
+          opcion.textContent = item.nombre;
+
+          plantel.appendChild(opcion);
+
+        });
+
+      })
+      .catch(function(error){
+
+        console.error("Error al cargar planteles:", error);
+
+        contenedor.style.display = "none";
+
+      });
+
+  });
+
+  if (zona.value !== "") {
+    zona.dispatchEvent(new Event("change"));
+  }
+
 }
-
-contenedor.style.display="block";
-
-const opcion=document.createElement("option");
-opcion.value="";
-opcion.text="Elija un plantel";
-plantel.appendChild(opcion);
-
-(zonas[zona.value] || []).forEach(function(nombre){
-
-const item=document.createElement("option");
-item.value=nombre;
-item.text=nombre;
-
-plantel.appendChild(item);
-
-});
-
-}
-
-zona.addEventListener("change",cargarPlanteles);
-
-if(zona.value!==""){
-cargarPlanteles();
-}
-
-});
-
 </script>

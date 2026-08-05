@@ -104,6 +104,8 @@ class NombresController < ApplicationController
   end
 
   def clave
+    @motivo = params[:motivo]
+    render :clave
   end
 
   def confirmar_eliminacion

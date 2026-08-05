@@ -32,7 +32,10 @@
         Escriba el motivo por el cual desea eliminar esta tesis.
       </p>
 
-      <%= form_with url: clave_nombre_path(@nombre), method: :post do %>
+<%= form_with url: clave_nombre_path(@nombre),
+              method: :post,
+              local: true,
+              data: { turbo: false } do %>      
 
         <div class="campo">
 

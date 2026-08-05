@@ -39,9 +39,20 @@ class ZonasController < ApplicationController
   end
 
   def planteles
-    zona = Zona.find(params[:id])
+
+    zona = Zona.find_by(id: params[:id])
+
+    if zona.nil?
+      zona = Zona.find_by(nombre: params[:id])
+    end
+
+    if zona.nil?
+      render json: []
+      return
+    end
 
     render json: zona.plantels.order(:nombre).select(:id, :nombre)
+
   end
 
   private

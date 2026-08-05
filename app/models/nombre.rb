@@ -21,6 +21,12 @@ class Nombre < ApplicationRecord
   validates :carrera,
     presence: { message: "Se requiere elegir Carrera" }
 
+  validates :zona,
+    presence: { message: "Se requiere elegir Zona" }
+
+  validates :plantel,
+    presence: { message: "Se requiere elegir Plantel" }
+
   validate :documento_obligatorio
   validate :validar_tipo_documento
   validate :validar_integrantes
