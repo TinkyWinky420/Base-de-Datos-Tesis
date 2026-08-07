@@ -120,6 +120,16 @@ img{
     align-items:center;
 }
 
+.badge-solo-lectura{
+    background:#fff3cd;
+    color:#7a5b00;
+    border:1px solid #ffd966;
+    border-radius:20px;
+    padding:6px 14px;
+    font-size:13px;
+    font-weight:600;
+}
+
 .layout{
     display:flex;
     margin-top:72px;

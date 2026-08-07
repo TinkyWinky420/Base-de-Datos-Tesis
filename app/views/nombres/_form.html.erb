@@ -359,6 +359,7 @@ container.insertAdjacentHTML("beforeend",html);
 
 }
 
+iniciarFormulario();
 document.addEventListener("turbo:load", iniciarFormulario);
 
 function iniciarFormulario() {
@@ -371,7 +372,7 @@ function iniciarFormulario() {
     return;
   }
 
-  zona.addEventListener("change", function () {
+  zona.onchange = function () {
 
     plantel.innerHTML = '<option value="">Elija un plantel</option>';
 
@@ -406,9 +407,10 @@ function iniciarFormulario() {
 
       });
 
-  });
+  };
 
-  if (zona.value !== "") {
+  if (zona.value !== "" && !plantel.dataset.cargado) {
+    plantel.dataset.cargado = "true";
     zona.dispatchEvent(new Event("change"));
   }
 

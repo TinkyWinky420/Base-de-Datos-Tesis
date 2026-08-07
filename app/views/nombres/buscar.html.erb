@@ -174,7 +174,7 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+function inicializarBusqueda() {
   const tipo = document.getElementById("tipoBusqueda");
   const campoNumero = document.getElementById("campoNumero");
   const campoNombre = document.getElementById("campoNombre");
@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 }
 
-  tipo.addEventListener("change", actualizarFormulario);
+  tipo.onchange = actualizarFormulario;
   actualizarFormulario();
   function cargarSugerencias(texto = "") {
   fetch(
@@ -268,7 +268,14 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 }
 
-  nombre.addEventListener("input", function () {
+  nombre.onfocus = function () {
+    if (tipo.value !== "asesor" && tipo.value !== "integrante") {
+      return;
+    }
+    cargarSugerencias(nombre.value);
+  };
+
+  nombre.oninput = function () {
     if (
     tipo.value === "numero" ||
     tipo.value === "matricula"
@@ -304,7 +311,7 @@ document.addEventListener("DOMContentLoaded", function () {
         lista.appendChild(opcion);
       });
     });
-  });
+  };
   document.addEventListener("click", function (e) {
     if (
       !lista.contains(e.target) &&
@@ -314,5 +321,9 @@ document.addEventListener("DOMContentLoaded", function () {
       lista.style.display = "none";
     }
   });
-});
+}
+
+inicializarBusqueda();
+document.addEventListener("turbo:load", inicializarBusqueda);
+
 </script>

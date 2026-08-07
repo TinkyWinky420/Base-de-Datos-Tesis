@@ -30,7 +30,11 @@
 
       <div class="topbar-user">
 
-        <% if session[:rol].present? %>
+        <% if modo_solo_lectura? %>
+
+          <span class="badge-solo-lectura">Solo lectura</span>
+
+        <% elsif session[:rol].present? %>
 
           <div class="dropdown">
 
@@ -67,11 +71,15 @@
 
         <% unless controller_name == "sesiones" %>
 
-          <%= link_to new_nombre_path, class: "sidebar-btn" do %>
-            <span class="icono">
-              <i class="bi bi-file-earmark-plus"></i>
-            </span>
-            <span class="texto">Registrar tesis</span>
+          <% unless modo_solo_lectura? %>
+
+            <%= link_to new_nombre_path, class: "sidebar-btn" do %>
+              <span class="icono">
+                <i class="bi bi-file-earmark-plus"></i>
+              </span>
+              <span class="texto">Registrar tesis</span>
+            <% end %>
+
           <% end %>
 
           <% if session[:rol] == "alumno" %>
@@ -221,14 +229,21 @@
     </div>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
+      function inicializarMenu() {
         const boton = document.getElementById("menu-toggle");
         const sidebar = document.getElementById("sidebar");
 
-        boton.addEventListener("click", function () {
+        if (!boton || !sidebar) {
+          return;
+        }
+
+        boton.onclick = function () {
           sidebar.classList.toggle("expandido");
-        });
-      });
+        };
+      }
+
+      inicializarMenu();
+      document.addEventListener("turbo:load", inicializarMenu);
     </script>
 
   </body>

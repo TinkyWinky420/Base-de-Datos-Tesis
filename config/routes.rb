@@ -36,5 +36,10 @@ Rails.application.routes.draw do
     end
   end
 
+  get "integrantes/:id/motivo", to: "integrantes#motivo", as: "motivo_integrante"
+  post "integrantes/:id/verificar_motivo", to: "integrantes#verificar_motivo", as: "verificar_motivo_integrante"
+  get "integrantes/:id/clave", to: "integrantes#clave", as: "clave_integrante"
+  post "integrantes/:id/eliminar_confirmado", to: "integrantes#eliminar_confirmado", as: "eliminar_confirmado_integrante"
+
   root "home#index"
 end

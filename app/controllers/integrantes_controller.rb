@@ -17,8 +17,10 @@ class IntegrantesController < ApplicationController
     @integrante = Integrante.find(params[:id])
 
     if params[:clave] == "0000"
+      tesis = @integrante.tesis
       @integrante.destroy
-      redirect_to nombres_path, notice: "Integrante eliminado correctamente"
+      session[:motivo] = nil
+      redirect_to edit_nombre_path(tesis), notice: "Integrante eliminado correctamente"
     else
       redirect_to clave_integrante_path(@integrante), alert: "Clave incorrecta"
     end

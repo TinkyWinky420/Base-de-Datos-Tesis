@@ -39,9 +39,6 @@ class NombresController < ApplicationController
     if @nombre.es_pdf?
       render :documento
 
-    elsif @nombre.es_word?
-      redirect_to @nombre, notice: "Se detectó un documento Word."
-
     else
       redirect_to @nombre, alert: "Formato de documento no soportado."
     end

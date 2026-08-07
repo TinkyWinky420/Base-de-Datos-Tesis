@@ -93,7 +93,7 @@
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
+function inicializarPagina() {
 
   const zona = document.getElementById("zona_select");
   const plantel = document.getElementById("plantel_select");
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const guardar = document.getElementById("guardar");
   const mensaje = document.getElementById("mensaje");
 
-  zona.addEventListener("change", function () {
+  zona.onchange = function () {
 
     plantel.innerHTML = '<option value="">Seleccione un plantel</option>';
 
@@ -137,9 +137,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       });
 
-  });
+  };
 
-  plantel.addEventListener("change", function(){
+  plantel.onchange = function(){
 
     lista.innerHTML = "";
 
@@ -179,9 +179,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       });
 
-  });
+  };
 
-  guardar.addEventListener("click", function(){
+  guardar.onclick = function(){
 
     const seleccionadas = [];
 
@@ -231,8 +231,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-  });
+  };
 
-});
+}
+
+inicializarPagina();
+document.addEventListener("turbo:load", inicializarPagina);
 
 </script>

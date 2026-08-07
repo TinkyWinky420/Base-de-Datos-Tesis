@@ -33,36 +33,28 @@
 
   <div class="seccion">
 
-    <h2>Confirmación de seguridad</h2>
+    <h2>Motivo de la eliminación</h2>
 
     <div class="contenido-seccion">
 
       <p>
-        Para confirmar la eliminación del integrante, ingrese la clave de seguridad.
+        Escriba el motivo por el cual desea eliminar este integrante.
       </p>
 
-      <% if flash[:alert] %>
-
-        <div class="mensaje-error">
-          <%= flash[:alert] %>
-        </div>
-
-      <% end %>
-
-      <%= form_with url: eliminar_confirmado_integrante_path(@integrante),
+<%= form_with url: verificar_motivo_integrante_path(@integrante),
               method: :post,
               local: true,
               data: { turbo: false } do %>
-        <%= hidden_field_tag :motivo, (session[:motivo] || params[:motivo]) %>
 
         <div class="campo">
 
-          <%= label_tag :clave, "Clave de seguridad" %>
+          <%= label_tag :motivo, "Motivo" %>
 
-          <%= password_field_tag :clave,
+          <%= text_area_tag :motivo,
           nil,
+          rows: 6,
           required: true,
-          placeholder: "Ingrese la clave" %>
+          placeholder: "Escriba aquí el motivo de la eliminación..." %>
 
         </div>
 
@@ -74,7 +66,7 @@
           destino,
           class: "btn" %>
 
-          <%= submit_tag "Eliminar integrante",
+          <%= submit_tag "Continuar",
           class: "btn btn-danger" %>
 
         </div>
