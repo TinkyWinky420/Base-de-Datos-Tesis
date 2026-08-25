@@ -188,11 +188,28 @@ Agregar integrante
 
 <div class="form-seccion-titulo">
 <h2>Asesores</h2>
-<p>Agregue los asesores responsables de la tesis.</p>
+<p>Seleccione el asesor principal y, si desea, un asesor secundario.</p>
 </div>
 
 <div id="asesores">
 
+<% asesores_lista = [
+"José Guadalupe Sánchez Hernández",
+"Bersain Selvas Díaz",
+"Jaime Minor Gómez",
+"Erika Maribel Arellano Orozco",
+"Delia Azucena Lienzo Vázquez",
+"Gerardo Estrada Gutiérrez",
+"Benjamín Nájera Espinosa",
+"Abraham Eduardo Viggers Virgen",
+"José Jovany Martínez Muñoz",
+"Eduardo García Castrejón",
+"Lic. Eduardo Castrejon",
+"Guillermo Torres Linares",
+"Eduardo Isaac Juárez Rivero"
+] %>
+
+<% first = true %>
 <%= form.fields_for :asesores do |a| %>
 
 <div class="asesor">
@@ -200,27 +217,27 @@ Agregar integrante
 <div class="campo">
 
 <label>
-Nombre <span class="obligatorio">* OBLIGATORIO</span>
+<%= first ? "Asesor principal" : "Asesor secundario" %> <span class="obligatorio">* OBLIGATORIO</span>
 </label>
 
-<%= a.text_field :nombre,
-pattern: "[A-Za-záéíóúÁÉÍÓÚñÑ ]+",
-placeholder: "Nombre del asesor",
-oninvalid: "this.setCustomValidity('El nombre no puede contener números')",
-oninput: "this.setCustomValidity('')" %>
+<%= a.select :nombre,
+asesores_lista,
+{ prompt: "Seleccione un asesor" },
+{ required: first, id: first ? "asesor_principal" : nil } %>
 
 </div>
 
 </div>
 
+<% first = false %>
 <% end %>
 
 </div>
 
-<div class="acciones-formulario">
+<div class="acciones-formulario" id="acciones-asesores">
 
 <button type="button" class="btn" onclick="agregarAsesor()">
-Agregar asesor
+Agregar asesor secundario
 </button>
 
 </div>
@@ -328,39 +345,75 @@ container.insertAdjacentHTML("beforeend",html);
 
 }
 
+var ASESORES=[
+"",
+"José Guadalupe Sánchez Hernández",
+"Bersain Selvas Díaz",
+"Jaime Minor Gómez",
+"Erika Maribel Arellano Orozco",
+"Delia Azucena Lienzo Vázquez",
+"Gerardo Estrada Gutiérrez",
+"Benjamín Nájera Espinosa",
+"Abraham Eduardo Viggers Virgen",
+"José Jovany Martínez Muñoz",
+"Eduardo García Castrejón",
+"Lic. Eduardo Castrejon",
+"Guillermo Torres Linares",
+"Eduardo Isaac Juárez Rivero"
+];
+
+function filtrarSecundario(){
+  var principal=document.getElementById("asesor_principal");
+  var secundario=document.getElementById("asesor_secundario");
+  if(!principal||!secundario)return;
+  var val=principal.value;
+  var actual=secundario.value;
+  secundario.innerHTML="";
+  for(var i=0;i<ASESORES.length;i++){
+    var opt=document.createElement("option");
+    opt.value=ASESORES[i];
+    opt.textContent=ASESORES[i]===""?"Seleccione un asesor":ASESORES[i];
+    if(ASESORES[i]===val&&val!=="")continue;
+    if(ASESORES[i]===actual)opt.selected=true;
+    secundario.appendChild(opt);
+  }
+}
+
 function agregarAsesor(){
 
-const container=document.getElementById("asesores");
-const index=container.querySelectorAll(".asesor").length;
+var container=document.getElementById("asesores");
+var existentes=container.querySelectorAll(".asesor").length;
 
-const html=`
-<div class="asesor">
+if(existentes>=2)return;
 
-<div class="campo">
+var index=existentes;
 
-<label>
-Nombre <span class="obligatorio">* OBLIGATORIO</span>
-</label>
-
-<input
-type="text"
-name="nombre[asesores_attributes][${index}][nombre]"
-placeholder="Nombre del asesor"
-pattern="[A-Za-záéíóúÁÉÍÓÚñÑ ]+"
-oninvalid="this.setCustomValidity('El nombre no puede contener números')"
-oninput="this.setCustomValidity('')">
-
-</div>
-
-</div>
-`;
+var html='<div class="asesor">'+
+'<div class="campo">'+
+'<label>Asesor secundario <span class="obligatorio">* OBLIGATORIO</span></label>'+
+'<select id="asesor_secundario" name="nombre[asesores_attributes]['+index+'][nombre]" required>'+
+'</select>'+
+'</div>'+
+'</div>';
 
 container.insertAdjacentHTML("beforeend",html);
 
+filtrarSecundario();
+document.getElementById("acciones-asesores").style.display="none";
+
+}
+
+function initAsesores(){
+  var principal=document.getElementById("asesor_principal");
+  if(principal){
+    principal.removeEventListener("change",filtrarSecundario);
+    principal.addEventListener("change",filtrarSecundario);
+  }
 }
 
 iniciarFormulario();
-document.addEventListener("turbo:load", iniciarFormulario);
+initAsesores();
+document.addEventListener("turbo:load", function(){ iniciarFormulario(); initAsesores(); });
 
 function iniciarFormulario() {
 

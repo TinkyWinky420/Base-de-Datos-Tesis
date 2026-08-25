@@ -10,6 +10,7 @@ class NombresController < ApplicationController
   ]
 
   before_action :bloquear_creacion, only: [:new, :create]
+  before_action :bloquear_busqueda_para_alumno, only: [:buscar, :sugerencias]
 
   def index
     @nombres = Nombre.all
@@ -229,8 +230,14 @@ end
   private
 
   def bloquear_creacion
-    if session[:rol] == "asesor"
+    if ["asesor", "administrativo"].include?(session[:rol])
       redirect_to root_path, alert: "No tienes permiso"
+    end
+  end
+
+  def bloquear_busqueda_para_alumno
+    if session[:rol] == "alumno"
+      redirect_to root_path, alert: "Tu rol solo te permite consultar tu propia tesis."
     end
   end
 

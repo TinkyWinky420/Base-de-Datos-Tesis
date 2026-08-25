@@ -71,7 +71,7 @@
 
         <% unless controller_name == "sesiones" %>
 
-          <% unless modo_solo_lectura? %>
+          <% unless modo_solo_lectura? || ["asesor", "administrativo"].include?(session[:rol]) %>
 
             <%= link_to new_nombre_path, class: "sidebar-btn" do %>
               <span class="icono">
@@ -89,13 +89,6 @@
                 <i class="bi bi-person-badge"></i>
               </span>
               <span class="texto">Revisar mi tesis</span>
-            <% end %>
-
-            <%= link_to buscar_nombres_path, class: "sidebar-btn" do %>
-              <span class="icono">
-                <i class="bi bi-search"></i>
-              </span>
-              <span class="texto">Buscar tesis</span>
             <% end %>
 
           <% elsif session[:rol] == "asesor" %>

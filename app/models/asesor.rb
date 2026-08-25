@@ -11,7 +11,7 @@ class Asesor < ApplicationRecord
 
   validates :nombre,
     format: {
-      with: /\A[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+\z/,
+      with: /\A[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\.]+\z/,
       message: "Los nombres de los asesores no pueden contener números"
     },
     unless: -> { nombre.blank? }
